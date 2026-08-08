@@ -199,10 +199,10 @@ export function TerminalApp({ onOpen }: { onOpen: (id: AppId) => void }) {
           spellCheck={false}
           autoComplete="off"
           aria-label="Terminal input"
-          className="flex-1 bg-transparent text-foreground caret-transparent outline-none"
+          className="flex-1 bg-transparent text-foreground outline-none"
         />
-        <span className="caret-blink -ml-1 inline-block h-4 w-2 bg-shell" />
       </form>
+
     </div>
   );
 }
