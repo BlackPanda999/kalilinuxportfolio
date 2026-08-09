@@ -4,6 +4,7 @@ import {
   BadgeCheck,
   FileText,
   FolderClosed,
+  ImageIcon,
   Mail,
   ScrollText,
   Terminal as TerminalIcon,
@@ -11,8 +12,8 @@ import {
   Wrench,
 } from "lucide-react";
 
-import wallpaper from "@/assets/wallpaper.jpg";
 import { profile } from "@/data/profile";
+import { randomWallpaperIndex, wallpapers } from "@/data/wallpapers";
 import { cn } from "@/lib/utils";
 import { BootScreen } from "./BootScreen";
 import { TopBar } from "./TopBar";
@@ -32,7 +33,9 @@ type AppDef = {
   id: AppId;
   label: string;
   title: string;
+  hint: string;
   icon: ReactNode;
+  tone: string;
   w: number;
   h: number;
 };
@@ -42,47 +45,104 @@ const APPS: AppDef[] = [
     id: "about",
     label: "About Me",
     title: "about_me.txt — Text Editor",
+    hint: "profile",
     icon: <UserRound />,
-    w: 720,
-    h: 560,
+    tone: "text-primary",
+    w: 760,
+    h: 580,
   },
   {
     id: "projects",
     label: "Projects",
     title: "~/projects — File Manager",
+    hint: "9 items",
     icon: <FolderClosed />,
-    w: 820,
-    h: 520,
+    tone: "text-warn",
+    w: 860,
+    h: 560,
   },
   {
     id: "certifications",
     label: "Certifications",
     title: "~/certifications — File Manager",
+    hint: "30+",
     icon: <BadgeCheck />,
-    w: 800,
-    h: 560,
+    tone: "text-shell",
+    w: 840,
+    h: 580,
   },
   {
     id: "experience",
     label: "Experience",
     title: "career.log — Log Viewer",
+    hint: "career.log",
     icon: <ScrollText />,
-    w: 760,
+    tone: "text-primary",
+    w: 800,
+    h: 580,
+  },
+  {
+    id: "skills",
+    label: "Skills",
+    title: "toolkit — Package Manager",
+    hint: "toolkit",
+    icon: <Wrench />,
+    tone: "text-shell",
+    w: 740,
+    h: 520,
+  },
+  {
+    id: "cv",
+    label: "CV",
+    title: "~/cv — File Manager",
+    hint: "2 PDFs",
+    icon: <FileText />,
+    tone: "text-warn",
+    w: 700,
+    h: 460,
+  },
+  {
+    id: "contact",
+    label: "Contact",
+    title: "contact.conf — Editor",
+    hint: "reach out",
+    icon: <Mail />,
+    tone: "text-primary",
+    w: 660,
+    h: 480,
+  },
+  {
+    id: "ai",
+    label: "Ask AI",
+    title: "panda-ai — Assistant",
+    hint: "panda-ai",
+    icon: <Bot />,
+    tone: "text-shell",
+    w: 700,
     h: 560,
   },
-  { id: "skills", label: "Skills", title: "toolkit — Package Manager", icon: <Wrench />, w: 700, h: 480 },
-  { id: "cv", label: "CV", title: "~/cv — File Manager", icon: <FileText />, w: 660, h: 420 },
-  { id: "contact", label: "Contact", title: "contact.conf — Editor", icon: <Mail />, w: 620, h: 440 },
-  { id: "ai", label: "Ask AI", title: "panda-ai — Assistant", icon: <Bot />, w: 660, h: 520 },
-  { id: "terminal", label: "Terminal", title: "blackpanda999@kali: ~", icon: <TerminalIcon />, w: 700, h: 440 },
+  {
+    id: "terminal",
+    label: "Terminal",
+    title: "blackpanda999@kali: ~",
+    hint: "zsh",
+    icon: <TerminalIcon />,
+    tone: "text-shell",
+    w: 740,
+    h: 460,
+  },
 ];
 
 export function Desktop() {
   const [booted, setBooted] = useState(false);
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [focused, setFocused] = useState<AppId | null>(null);
+  const [paper, setPaper] = useState(0);
   const zRef = useRef(10);
   const openCount = useRef(0);
+
+  // pick a random wallpaper per page load (client-side to keep SSR stable)
+  useEffect(() => setPaper(randomWallpaperIndex()), []);
 
   function focus(id: AppId) {
     zRef.current += 1;
@@ -154,13 +214,21 @@ export function Desktop() {
   return (
     <div className="relative h-screen w-full overflow-hidden">
       <img
-        src={wallpaper}
+        key={paper}
+        src={wallpapers[paper]}
         alt=""
         width={1920}
         height={1088}
-        className="absolute inset-0 size-full object-cover"
+        className="absolute inset-0 size-full animate-in object-cover duration-700 fade-in"
       />
-      <div className="absolute inset-0 bg-background/55" />
+      <div className="absolute inset-0 bg-background/50" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 45%, transparent 0%, oklch(0.1 0.02 260 / 0.55) 75%)",
+        }}
+      />
 
       <div className="relative flex h-full flex-col">
         <TopBar />
@@ -170,26 +238,53 @@ export function Desktop() {
             {profile.name} — {profile.titles.join(", ")}
           </h1>
 
-          {/* desktop icons */}
-          <ul className="absolute top-4 left-4 grid max-h-[calc(100%-2rem)] grid-flow-col grid-rows-6 gap-1">
-            {APPS.map((app) => (
-              <li key={app.id}>
-                <button
-                  type="button"
-                  onDoubleClick={() => open(app.id)}
-                  onClick={() => open(app.id)}
-                  className="group flex w-24 flex-col items-center gap-1.5 rounded-md p-2 text-center transition-colors hover:bg-primary/15 focus-visible:bg-primary/15 focus-visible:outline-none"
-                >
-                  <span className="grid size-11 place-items-center rounded-md border border-border/70 bg-card/70 text-primary [&_svg]:size-5 group-hover:border-primary/60">
-                    {app.icon}
-                  </span>
-                  <span className="font-mono text-[10.5px] leading-tight text-foreground/90">
-                    {app.label}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
+          {/* centered desktop launcher */}
+          <div className="absolute inset-0 grid place-items-center p-4">
+            <div className="flex flex-col items-center gap-6">
+              <div className="text-center">
+                <p className="font-mono text-[11px] tracking-[0.3em] text-primary/80 uppercase">
+                  PandaOS · {profile.host}
+                </p>
+                <p className="mt-2 font-mono text-lg text-foreground/90 sm:text-xl">
+                  {profile.name}
+                  <span className="caret-blink ml-1 text-shell">_</span>
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  double-click an icon to launch · type <span className="text-shell">help</span> in Terminal
+                </p>
+              </div>
+
+              <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4">
+                {APPS.map((app) => (
+                  <li key={app.id}>
+                    <button
+                      type="button"
+                      onDoubleClick={() => open(app.id)}
+                      onClick={() => open(app.id)}
+                      className="group flex w-[5.75rem] flex-col items-center gap-2 rounded-xl p-2 transition-transform duration-200 hover:-translate-y-1 focus-visible:outline-none sm:w-24"
+                    >
+                      <span
+                        className={cn(
+                          "relative grid size-16 place-items-center rounded-2xl border border-border/70 bg-card/50 backdrop-blur-md transition-all duration-200 [&_svg]:size-7 [&_svg]:stroke-[1.75]",
+                          "group-hover:border-primary/70 group-hover:bg-card/80 group-hover:glow-primary group-focus-visible:border-primary",
+                          app.tone,
+                        )}
+                      >
+                        <span className="absolute inset-x-3 top-0 h-px bg-foreground/15" />
+                        {app.icon}
+                      </span>
+                      <span className="font-mono text-[11px] leading-tight text-foreground/90">
+                        {app.label}
+                      </span>
+                      <span className="font-mono text-[9.5px] text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
+                        {app.hint}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
           {windows.map((state) => {
             const app = APPS.find((entry) => entry.id === state.id)!;
@@ -213,32 +308,46 @@ export function Desktop() {
           })}
         </main>
 
-        {/* taskbar */}
-        <footer className="panel-blur relative z-[9000] flex h-[3.25rem] shrink-0 items-center gap-2 border-t border-border/60 px-3">
-          <span className="hidden font-mono text-[11px] text-primary sm:inline">▚ apps</span>
+        {/* taskbar — only running windows */}
+        <footer className="panel-blur relative z-[9000] flex h-[3.25rem] shrink-0 items-center gap-3 border-t border-border/60 px-3">
+          <span className="hidden font-mono text-[11px] text-primary sm:inline">▚ running</span>
           <ul className="term-scroll flex flex-1 items-center gap-1.5 overflow-x-auto">
-            {APPS.map((app) => {
-              const state = windows.find((w) => w.id === app.id);
+            {windows.length === 0 && (
+              <li className="font-mono text-[11px] text-muted-foreground">no windows open</li>
+            )}
+            {windows.map((state) => {
+              const app = APPS.find((entry) => entry.id === state.id)!;
               return (
-                <li key={app.id}>
+                <li key={state.id}>
                   <button
                     type="button"
-                    onClick={() => (state ? (state.minimized ? focus(app.id) : update(app.id, { minimized: true })) : open(app.id))}
+                    onClick={() =>
+                      state.minimized ? focus(state.id) : update(state.id, { minimized: true })
+                    }
                     title={app.label}
                     className={cn(
                       "flex items-center gap-2 rounded-md border px-2.5 py-1.5 font-mono text-[11px] transition-colors [&_svg]:size-4",
-                      state
+                      focused === state.id && !state.minimized
                         ? "border-primary/60 bg-primary/15 text-primary"
-                        : "border-transparent text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                        : "border-border/60 text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
                     )}
                   >
                     {app.icon}
-                    <span className="hidden md:inline">{app.label}</span>
+                    <span className="hidden sm:inline">{app.label}</span>
                   </button>
                 </li>
               );
             })}
           </ul>
+          <button
+            type="button"
+            onClick={() => setPaper((p) => (p + 1) % wallpapers.length)}
+            title="Change wallpaper"
+            className="flex shrink-0 items-center gap-2 rounded-md border border-border/60 px-2.5 py-1.5 font-mono text-[11px] text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary [&_svg]:size-4"
+          >
+            <ImageIcon />
+            <span className="hidden sm:inline">wallpaper</span>
+          </button>
         </footer>
       </div>
     </div>

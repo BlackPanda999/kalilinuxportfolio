@@ -1,11 +1,16 @@
 import { skills } from "@/data/profile";
-import { Chip, Pane, PathBar, SectionTitle } from "./ui";
+import { Chip, Pane, PageHeader, PathBar, SectionTitle } from "./ui";
 
 export function SkillsApp() {
   return (
     <div>
       <PathBar path="/usr/local/bin/ — installed toolkit" />
-      <Pane className="space-y-6">
+      <Pane className="space-y-8">
+        <PageHeader
+          kicker="package manager"
+          title="Skills & toolkit"
+          intro="Tools and platforms used day to day across security, cloud and IT operations."
+        />
         {skills.map((group) => (
           <section key={group.group}>
             <SectionTitle>{group.group}</SectionTitle>
