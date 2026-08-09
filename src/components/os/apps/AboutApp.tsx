@@ -1,24 +1,26 @@
 import { Linkedin, Globe, Mail, MapPin, Phone } from "lucide-react";
 
 import { profile } from "@/data/profile";
-import { Chip, Pane, PathBar, SectionTitle } from "./ui";
+import { Card, Chip, Pane, PageHeader, PathBar, SectionTitle, Stat } from "./ui";
 
 export function AboutApp() {
   return (
     <div>
       <PathBar path="/home/blackpanda999/about_me.txt" />
-      <Pane className="space-y-6">
-        <div className="flex flex-wrap items-start gap-5">
+      <Pane className="space-y-8">
+        {/* hero */}
+        <div className="flex flex-wrap items-center gap-6">
           <div
-            className="grid size-20 shrink-0 place-items-center rounded-md border border-primary/40 font-mono text-2xl text-primary glow-primary"
+            className="grid size-24 shrink-0 place-items-center rounded-2xl border border-primary/40 font-mono text-3xl font-bold text-primary glow-primary"
             style={{ backgroundColor: "var(--color-terminal)" }}
           >
             OK
           </div>
           <div className="min-w-64 flex-1">
-            <h1 className="font-mono text-2xl font-bold text-foreground">{profile.name}</h1>
-            <p className="mt-1 text-sm text-primary">{profile.titles.join(" · ")}</p>
-            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
+            <p className="font-mono text-[11px] tracking-[0.24em] text-shell uppercase">whoami</p>
+            <h2 className="mt-1 text-3xl font-bold tracking-tight text-foreground">{profile.name}</h2>
+            <p className="mt-1.5 text-sm text-primary">{profile.titles.join(" · ")}</p>
+            <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-1.5">
                 <MapPin className="size-3.5" />
                 {profile.location}
@@ -53,48 +55,62 @@ export function AboutApp() {
           </div>
         </div>
 
-        <p className="max-w-3xl text-sm leading-relaxed text-foreground/85">{profile.summary}</p>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <Stat value={`${profile.education.length}`} label="Degrees" />
+          <Stat value="30+" label="Certifications" />
+          <Stat value={`${profile.languages.length}`} label="Languages" />
+        </div>
 
-        <div>
+        <p className="max-w-3xl border-l-2 border-primary/50 pl-4 text-[15px] leading-relaxed text-foreground/85">
+          {profile.summary}
+        </p>
+
+        <section>
           <SectionTitle>Core strengths</SectionTitle>
-          <ul className="grid gap-2 sm:grid-cols-2">
+          <ul className="grid gap-3 sm:grid-cols-2">
             {profile.highlights.map((item) => (
-              <li key={item} className="flex gap-2 text-sm text-foreground/80">
-                <span className="text-shell">▸</span>
-                {item}
+              <li key={item}>
+                <Card className="flex gap-3 p-4 text-sm text-foreground/85">
+                  <span className="text-shell">▸</span>
+                  {item}
+                </Card>
               </li>
             ))}
           </ul>
-        </div>
+        </section>
 
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div>
+        <div className="grid gap-8 sm:grid-cols-2">
+          <section>
             <SectionTitle>Education</SectionTitle>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {profile.education.map((entry) => (
-                <li key={entry.school} className="text-sm">
-                  <p className="text-foreground/90">{entry.school}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {entry.field} · {entry.year}
-                  </p>
+                <li key={entry.school}>
+                  <Card className="p-4">
+                    <p className="text-sm text-foreground/90">{entry.school}</p>
+                    <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+                      {entry.field} · {entry.year}
+                    </p>
+                  </Card>
                 </li>
               ))}
             </ul>
-          </div>
-          <div>
+          </section>
+          <section>
             <SectionTitle>Languages</SectionTitle>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {profile.languages.map((lang) => (
-                <li key={lang.name} className="text-sm">
-                  <p className="text-foreground/90">{lang.name}</p>
-                  <p className="text-xs text-muted-foreground">{lang.level}</p>
+                <li key={lang.name}>
+                  <Card className="flex items-center justify-between p-4">
+                    <span className="text-sm text-foreground/90">{lang.name}</span>
+                    <span className="font-mono text-[11px] text-shell">{lang.level}</span>
+                  </Card>
                 </li>
               ))}
             </ul>
-          </div>
+          </section>
         </div>
 
-        <div className="flex flex-wrap gap-2 border-t border-border/60 pt-4">
+        <div className="flex flex-wrap gap-2 border-t border-border/60 pt-5">
           {profile.availability.split(" · ").map((item) => (
             <Chip key={item}>{item}</Chip>
           ))}
