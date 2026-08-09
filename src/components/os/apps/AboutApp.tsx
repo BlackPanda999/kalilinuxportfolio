@@ -1,7 +1,7 @@
 import { Linkedin, Globe, Mail, MapPin, Phone } from "lucide-react";
 
 import { profile } from "@/data/profile";
-import { Card, Chip, Pane, PageHeader, PathBar, SectionTitle, Stat } from "./ui";
+import { Card, Chip, Pane, PathBar, SectionTitle, Stat } from "./ui";
 
 export function AboutApp() {
   return (
