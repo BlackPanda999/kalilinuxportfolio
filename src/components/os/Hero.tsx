@@ -18,7 +18,7 @@ function useTypedRole() {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    const full = ROLES[index];
+    const full = ROLES[index] ?? "";
     if (!deleting && text === full) {
       const hold = setTimeout(() => setDeleting(true), 1600);
       return () => clearTimeout(hold);
