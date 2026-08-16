@@ -16,6 +16,7 @@ import { profile } from "@/data/profile";
 import { randomWallpaperIndex, wallpapers } from "@/data/wallpapers";
 import { cn } from "@/lib/utils";
 import { BootScreen } from "./BootScreen";
+import { Hero } from "./Hero";
 import { TopBar } from "./TopBar";
 import { Window } from "./Window";
 import type { AppId, WindowState } from "./types";
@@ -231,7 +232,7 @@ export function Desktop() {
       />
 
       <div className="relative flex h-full flex-col">
-        <TopBar />
+        <TopBar onOpen={open} />
 
         <main className="relative min-h-0 flex-1">
           <h1 className="sr-only">
@@ -240,40 +241,32 @@ export function Desktop() {
 
           {/* centered desktop launcher */}
           <div className="absolute inset-0 grid place-items-center p-4">
-            <div className="flex flex-col items-center gap-6">
-              <div className="text-center">
-                <p className="font-mono text-[11px] tracking-[0.3em] text-primary/80 uppercase">
-                  PandaOS · {profile.host}
-                </p>
-                <p className="mt-2 font-mono text-lg text-foreground/90 sm:text-xl">
-                  {profile.name}
-                  <span className="caret-blink ml-1 text-shell">_</span>
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  double-click an icon to launch · type <span className="text-shell">help</span> in Terminal
-                </p>
-              </div>
+            <div className="flex flex-col items-center gap-8">
+              <Hero />
 
-              <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4">
-                {APPS.map((app) => (
-                  <li key={app.id}>
+              <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-5">
+                {APPS.map((app, i) => (
+                  <li key={app.id} className="icon-pop" style={{ animationDelay: `${i * 55}ms` }}>
                     <button
                       type="button"
                       onDoubleClick={() => open(app.id)}
                       onClick={() => open(app.id)}
-                      className="group flex w-[5.75rem] flex-col items-center gap-2 rounded-xl p-2 transition-transform duration-200 hover:-translate-y-1 focus-visible:outline-none sm:w-24"
+                      className="group flex w-[5.75rem] flex-col items-center gap-2 rounded-xl p-2 focus-visible:outline-none sm:w-24"
                     >
                       <span
                         className={cn(
-                          "relative grid size-16 place-items-center rounded-2xl border border-border/70 bg-card/50 backdrop-blur-md transition-all duration-200 [&_svg]:size-7 [&_svg]:stroke-[1.75]",
-                          "group-hover:border-primary/70 group-hover:bg-card/80 group-hover:glow-primary group-focus-visible:border-primary",
+                          "icon-3d relative grid size-16 place-items-center rounded-2xl border border-border/70 backdrop-blur-md",
+                          "transition-transform duration-300 ease-out will-change-transform",
+                          "group-hover:-translate-y-1.5 group-hover:scale-110 group-active:scale-95",
+                          "group-hover:border-primary/70 group-hover:glow-primary group-focus-visible:border-primary",
+                          "[&_svg]:size-7 [&_svg]:drop-shadow-[0_2px_3px_oklch(0_0_0/0.6)] [&_svg]:stroke-[1.9]",
                           app.tone,
                         )}
                       >
-                        <span className="absolute inset-x-3 top-0 h-px bg-foreground/15" />
+                        <span className="absolute inset-x-3 top-0.5 h-px rounded-full bg-foreground/25" />
                         {app.icon}
                       </span>
-                      <span className="font-mono text-[11px] leading-tight text-foreground/90">
+                      <span className="font-sans text-[11px] font-medium leading-tight text-foreground/90 transition-colors group-hover:text-primary">
                         {app.label}
                       </span>
                       <span className="font-mono text-[9.5px] text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
