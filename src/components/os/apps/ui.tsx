@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export function Pane({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("p-6 sm:p-8", className)}>{children}</div>;
+  return <div className={cn("prose-app p-6 sm:p-9", className)}>{children}</div>;
 }
 
 export function PathBar({ path }: { path: string }) {
@@ -22,7 +22,7 @@ export function PathBar({ path }: { path: string }) {
 /** Editorial section heading — small kicker + big title, website style. */
 export function SectionTitle({ children }: { children: ReactNode }) {
   return (
-    <h3 className="mb-4 flex items-center gap-3 font-mono text-[11px] tracking-[0.22em] text-primary uppercase">
+    <h3 className="mb-4 flex items-center gap-3 font-sans text-xs font-semibold tracking-[0.18em] text-primary uppercase">
       <span className="h-px w-6 bg-primary/60" />
       {children}
     </h3>
@@ -39,10 +39,18 @@ export function PageHeader({
   intro?: string;
 }) {
   return (
-    <header className="border-b border-border/60 pb-6">
-      <p className="font-mono text-[11px] tracking-[0.24em] text-shell uppercase">{kicker}</p>
-      <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{title}</h2>
-      {intro && <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{intro}</p>}
+    <header className="border-b border-border/60 pb-7">
+      <p className="font-sans text-[11px] font-semibold tracking-[0.24em] text-shell uppercase">
+        {kicker}
+      </p>
+      <h2 className="mt-2.5 font-sans text-[1.7rem] font-extrabold leading-tight tracking-tight text-foreground sm:text-4xl">
+        {title}
+      </h2>
+      {intro && (
+        <p className="mt-3.5 max-w-2xl text-[0.95rem] leading-[1.8] text-muted-foreground">
+          {intro}
+        </p>
+      )}
     </header>
   );
 }
@@ -51,7 +59,8 @@ export function Card({ children, className }: { children: ReactNode; className?:
   return (
     <div
       className={cn(
-        "rounded-xl border border-border/70 bg-card/40 p-5 transition-colors hover:border-primary/50",
+        "rounded-xl border border-border/70 bg-card/40 p-5 leading-relaxed transition-all duration-200",
+        "hover:-translate-y-0.5 hover:border-primary/50 hover:bg-card/60",
         className,
       )}
     >
