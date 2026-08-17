@@ -1,4 +1,4 @@
-import { FileCode2 } from "lucide-react";
+import { FileCode2, FolderOpen } from "lucide-react";
 import { useState } from "react";
 
 import { projects } from "@/data/profile";
@@ -13,7 +13,10 @@ export function ProjectsApp() {
     <div className="flex h-full min-h-0 flex-col">
       <PathBar path={`/home/blackpanda999/projects/ — ${projects.length} items`} />
       <div className="flex min-h-0 flex-1 flex-col sm:flex-row">
-        <ul className="term-scroll shrink-0 overflow-auto border-b border-border/70 bg-secondary/20 p-2 sm:max-h-none sm:w-64 sm:border-r sm:border-b-0">
+        <ul className="term-scroll shrink-0 overflow-auto border-b border-border/70 bg-secondary/20 p-2 sm:max-h-none sm:w-72 sm:border-r sm:border-b-0">
+          <li className="flex items-center gap-2 px-3 py-2 font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+            <FolderOpen className="size-3.5" /> projects
+          </li>
           {projects.map((project, index) => (
             <li key={project.file}>
               <button
@@ -33,29 +36,41 @@ export function ProjectsApp() {
           ))}
         </ul>
 
-        <article className="term-scroll min-h-0 flex-1 overflow-auto p-6 sm:p-8">
-          <p className="font-mono text-[11px] tracking-[0.24em] text-shell uppercase">case study</p>
-          <h3 className="mt-2 text-2xl font-bold tracking-tight text-foreground">{active.name}</h3>
-          {active.period && <p className="mt-1 font-mono text-[11px] text-primary">{active.period}</p>}
-          <p className="mt-4 max-w-2xl border-l-2 border-primary/50 pl-4 text-[15px] leading-relaxed text-foreground/85">
+        <article className="term-scroll grid-mesh prose-app min-h-0 flex-1 overflow-auto p-6 sm:p-9">
+          <p className="inline-flex items-center gap-2 rounded-full border border-shell/30 bg-shell/10 px-3 py-1 font-mono text-[10px] tracking-[0.22em] text-shell uppercase">
+            <span className="size-1.5 rounded-full bg-shell caret-blink" /> case study
+          </p>
+          <h3 className="mt-4 text-2xl font-extrabold tracking-tight text-foreground sm:text-[2rem]">
+            {active.name}
+          </h3>
+          {active.period && <p className="mt-1.5 font-mono text-[11px] text-primary">{active.period}</p>}
+          <p className="mt-4 max-w-2xl border-l-2 border-primary/50 pl-5 text-[15.5px] leading-[1.9] text-foreground/85">
             {active.summary}
           </p>
-          <h4 className="mt-6 mb-3 flex items-center gap-3 font-mono text-[11px] tracking-[0.22em] text-primary uppercase">
+
+          <h4 className="mt-8 mb-4 flex items-center gap-3 font-sans text-[11px] font-semibold tracking-[0.22em] text-primary uppercase">
             <span className="h-px w-6 bg-primary/60" />
             what I did
+            <span className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
           </h4>
           <ul className="space-y-2.5">
             {active.points.map((point) => (
               <li
                 key={point}
-                className="flex gap-3 rounded-lg border border-border/60 bg-card/40 p-3.5 text-sm leading-relaxed text-foreground/80"
+                className="flex gap-3 rounded-lg border border-border/50 bg-terminal/50 px-3.5 py-3 text-sm leading-[1.8] text-foreground/85 transition-colors hover:border-shell/40"
               >
-                <span className="text-shell">$</span>
+                <span className="font-mono text-shell">$</span>
                 {point}
               </li>
             ))}
           </ul>
-          <div className="mt-6 flex flex-wrap gap-2">
+
+          <h4 className="mt-8 mb-3 flex items-center gap-3 font-sans text-[11px] font-semibold tracking-[0.22em] text-primary uppercase">
+            <span className="h-px w-6 bg-primary/60" />
+            stack
+            <span className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+          </h4>
+          <div className="flex flex-wrap gap-2">
             {active.stack.map((tool) => (
               <Chip key={tool}>{tool}</Chip>
             ))}
