@@ -1,7 +1,7 @@
-import { Globe, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import { Globe, Linkedin, Mail, MapPin, Phone, Send } from "lucide-react";
 
 import { profile } from "@/data/profile";
-import { Pane, PageHeader, PathBar } from "./ui";
+import { Chip, Pane, PageHeader, PathBar } from "./ui";
 
 const rows = [
   { icon: Mail, label: "email", value: profile.email, href: `mailto:${profile.email}` },
@@ -15,19 +15,20 @@ export function ContactApp() {
   return (
     <div>
       <PathBar path="/etc/contact.conf" />
-      <Pane className="space-y-6">
+      <Pane className="space-y-8">
         <PageHeader
           kicker="get in touch"
-          title="Contact"
-          intro="Open to cyber security, IT and AI integration roles in Saudi Arabia and remote."
+          title="Let's connect"
+          intro="Open to cyber security, IT and AI integration roles in Saudi Arabia and remote engagements worldwide."
+          meta={profile.availability.split(" · ").map((item) => <Chip key={item}>{item}</Chip>)}
         />
         <ul className="grid gap-3 sm:grid-cols-2">
           {rows.map((row) => (
             <li
               key={row.label}
-              className="flex items-center gap-3 rounded-xl border border-border/70 bg-card/40 px-4 py-3.5 transition-colors hover:border-primary/50"
+              className="group flex items-center gap-3 rounded-xl border border-border/70 bg-card/40 px-4 py-4 transition-all hover:-translate-y-0.5 hover:border-primary/50"
             >
-              <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-border/70 bg-secondary/50 text-primary">
+              <span className="grid size-10 shrink-0 place-items-center rounded-lg border border-border/70 bg-secondary/50 text-primary transition-colors group-hover:border-primary/50 group-hover:bg-primary/10">
                 <row.icon className="size-4" />
               </span>
               <span className="min-w-0">
@@ -50,7 +51,21 @@ export function ContactApp() {
             </li>
           ))}
         </ul>
-        <p className="font-mono text-xs text-shell">// {profile.availability}</p>
+
+        <div className="rounded-xl border border-shell/25 bg-terminal/60 p-5 font-mono text-xs leading-relaxed text-shell/90">
+          <p>
+            <span className="text-primary">blackpanda999@kali</span>:~$ mail -s &quot;Let&apos;s work
+            together&quot; {profile.email}
+          </p>
+          <p className="mt-1 text-muted-foreground">// replies usually within 24 hours</p>
+        </div>
+
+        <a
+          href={`mailto:${profile.email}`}
+          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 font-mono text-[12px] text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          <Send className="size-3.5" /> send message
+        </a>
       </Pane>
     </div>
   );

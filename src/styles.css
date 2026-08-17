@@ -209,3 +209,16 @@
     background: transparent;
   }
 }
+
+/* faint hacker grid + vignette behind app content */
+@utility grid-mesh {
+  background-image:
+    linear-gradient(to right, oklch(1 0 0 / 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(1 0 0 / 0.025) 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+
+/* glowing terminal text */
+@utility text-glow {
+  text-shadow: 0 0 12px color-mix(in oklab, var(--color-shell) 55%, transparent);
+}
