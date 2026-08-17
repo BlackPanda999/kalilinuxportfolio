@@ -1,7 +1,7 @@
-import { BadgeCheck } from "lucide-react";
+import { BadgeCheck, ShieldCheck } from "lucide-react";
 
 import { certifications } from "@/data/profile";
-import { Card, Pane, PageHeader, PathBar, SectionTitle } from "./ui";
+import { Card, Chip, Pane, PageHeader, PathBar, SectionTitle, Stat } from "./ui";
 
 export function CertificationsApp() {
   const total = certifications.reduce((sum, group) => sum + group.items.length, 0);
@@ -9,16 +9,28 @@ export function CertificationsApp() {
   return (
     <div>
       <PathBar path={`/home/blackpanda999/certifications/ — ${total} credentials`} />
-      <Pane className="space-y-8">
+      <Pane className="space-y-9">
         <PageHeader
           kicker="verified credentials"
           title={`${total} certifications`}
-          intro="Cyber security, cloud, networking and IT support credentials — grouped by discipline."
+          intro="Cyber security, cloud, networking and IT support credentials — grouped by discipline and continuously extended."
+          meta={certifications.map((group) => (
+            <Chip key={group.group}>
+              {group.group} · {group.items.length}
+            </Chip>
+          ))}
         />
-        <div className="grid gap-6 sm:grid-cols-2">
-          {certifications.map((group) => (
+
+        <div className="grid gap-3 sm:grid-cols-3">
+          <Stat value={`${total}`} label="Total credentials" />
+          <Stat value={`${certifications.length}`} label="Disciplines" />
+          <Stat value="2026" label="Latest year" />
+        </div>
+
+        <div className="grid gap-8 sm:grid-cols-2">
+          {certifications.map((group, index) => (
             <section key={group.group}>
-              <SectionTitle>
+              <SectionTitle index={index + 1}>
                 {group.group} · {group.items.length}
               </SectionTitle>
               <ul className="space-y-2">
@@ -34,6 +46,10 @@ export function CertificationsApp() {
             </section>
           ))}
         </div>
+
+        <p className="inline-flex items-center gap-2 border-t border-border/60 pt-6 font-mono text-xs text-shell">
+          <ShieldCheck className="size-4" /> all credentials verifiable on request
+        </p>
       </Pane>
     </div>
   );
