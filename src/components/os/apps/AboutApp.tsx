@@ -7,9 +7,9 @@ export function AboutApp() {
   return (
     <div>
       <PathBar path="/home/blackpanda999/about_me.txt" />
-      <Pane className="space-y-10">
+      <Pane className="space-y-7">
         {/* hero */}
-        <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/30 p-6 sm:p-8">
+        <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/30 p-5 sm:p-7">
           <span className="pointer-events-none absolute -top-24 -right-16 size-56 rounded-full bg-primary/15 blur-3xl" />
           <div className="relative flex flex-wrap items-center gap-6">
             <div
@@ -62,7 +62,7 @@ export function AboutApp() {
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
           <Stat value="5+" label="Years experience" />
           <Stat value={`${profile.education.length}`} label="Degrees" />
           <Stat value="30+" label="Certifications" />
@@ -78,14 +78,14 @@ export function AboutApp() {
 
         <section>
           <SectionTitle index={2}>Core strengths</SectionTitle>
-          <ul className="grid gap-2.5 sm:grid-cols-2">
+          <ul className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
             {profile.highlights.map((item) => (
               <CmdLine key={item}>{item}</CmdLine>
             ))}
           </ul>
         </section>
 
-        <div className="grid gap-8 sm:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-2">
           <section>
             <SectionTitle index={3}>Education</SectionTitle>
             <ul className="space-y-3">

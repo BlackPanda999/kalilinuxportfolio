@@ -7,7 +7,7 @@ export function ExperienceApp() {
   return (
     <div>
       <PathBar path="/var/log/career.log" />
-      <Pane className="space-y-9">
+      <Pane className="space-y-7">
         <PageHeader
           kicker="career log"
           title="Experience"
@@ -20,13 +20,13 @@ export function ExperienceApp() {
             </>
           }
         />
-        <ol className="relative space-y-6 border-l border-border/70 pl-7">
+        <ol className="relative space-y-4 border-l border-border/70 pl-6 sm:pl-7">
           {experience.map((job, index) => (
             <li key={`${job.role}-${job.company}`} className="relative">
               <span className="absolute top-6 -left-[2.15rem] grid size-5 place-items-center rounded-full border border-primary/50 bg-background">
                 <span className="size-2 rounded-full bg-primary glow-primary" />
               </span>
-              <Card className="p-5 sm:p-6">
+              <Card className="p-4 sm:p-5">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <h3 className="text-lg font-bold tracking-tight text-foreground sm:text-xl">
                     {job.role}

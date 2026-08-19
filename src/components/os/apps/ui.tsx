@@ -4,13 +4,20 @@ import { cn } from "@/lib/utils";
 
 export function Pane({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cn("prose-app grid-mesh relative p-6 sm:p-10", className)}>{children}</div>
+    <div
+      className={cn(
+        "prose-app prose-term grid-mesh ambient-glow scanlines-soft relative min-h-full p-4 sm:p-7 lg:p-9",
+        className,
+      )}
+    >
+      {children}
+    </div>
   );
 }
 
 export function PathBar({ path }: { path: string }) {
   return (
-    <div className="flex items-center gap-2 border-b border-border/70 bg-secondary/40 px-4 py-2 font-mono text-[11px] text-muted-foreground">
+    <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-border/70 bg-secondary/60 px-3 py-2 font-mono text-[10.5px] text-muted-foreground backdrop-blur-md sm:px-4 sm:text-[11px]">
       <span className="inline-flex gap-1">
         <i className="size-2 rounded-full bg-destructive/70" />
         <i className="size-2 rounded-full bg-warn/70" />
@@ -27,7 +34,7 @@ export function PathBar({ path }: { path: string }) {
 /** Editorial section heading — numbered kicker + rule, website style. */
 export function SectionTitle({ children, index }: { children: ReactNode; index?: number }) {
   return (
-    <h3 className="mb-5 flex items-center gap-3 font-sans text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+    <h3 className="mb-4 flex items-center gap-3 font-sans text-xs font-semibold tracking-[0.18em] text-primary uppercase">
       {index !== undefined && (
         <span className="font-mono text-[10px] text-shell/80">
           {String(index).padStart(2, "0")}
@@ -52,21 +59,21 @@ export function PageHeader({
   meta?: ReactNode;
 }) {
   return (
-    <header className="relative border-b border-border/60 pb-8">
+    <header className="relative border-b border-border/60 pb-6">
       <p className="inline-flex items-center gap-2 rounded-full border border-shell/30 bg-shell/10 px-3 py-1 font-mono text-[10px] tracking-[0.22em] text-shell uppercase">
         <span className="size-1.5 rounded-full bg-shell caret-blink" />
         {kicker}
       </p>
-      <h2 className="mt-4 font-sans text-[1.8rem] leading-[1.1] font-extrabold tracking-tight text-foreground sm:text-[2.6rem]">
+      <h2 className="mt-3 font-sans text-[1.55rem] leading-[1.12] font-extrabold tracking-tight text-foreground text-balance sm:text-[2.2rem] lg:text-[2.5rem]">
         {title}
         <span className="ml-1 text-primary">_</span>
       </h2>
       {intro && (
-        <p className="mt-4 max-w-2xl text-[0.97rem] leading-[1.85] text-muted-foreground">
+        <p className="mt-3 max-w-2xl text-[0.93rem] leading-[1.8] text-muted-foreground sm:text-[0.97rem]">
           {intro}
         </p>
       )}
-      {meta && <div className="mt-5 flex flex-wrap gap-2">{meta}</div>}
+      {meta && <div className="mt-4 flex flex-wrap gap-2">{meta}</div>}
     </header>
   );
 }

@@ -9,7 +9,7 @@ export function CertificationsApp() {
   return (
     <div>
       <PathBar path={`/home/blackpanda999/certifications/ — ${total} credentials`} />
-      <Pane className="space-y-9">
+      <Pane className="space-y-7">
         <PageHeader
           kicker="verified credentials"
           title={`${total} certifications`}
@@ -21,13 +21,13 @@ export function CertificationsApp() {
           ))}
         />
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-3 gap-2.5">
           <Stat value={`${total}`} label="Total credentials" />
           <Stat value={`${certifications.length}`} label="Disciplines" />
           <Stat value="2026" label="Latest year" />
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {certifications.map((group, index) => (
             <section key={group.group}>
               <SectionTitle index={index + 1}>

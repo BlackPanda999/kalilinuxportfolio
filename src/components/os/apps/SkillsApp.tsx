@@ -9,7 +9,7 @@ export function SkillsApp() {
   return (
     <div>
       <PathBar path="/usr/local/bin/ — installed toolkit" />
-      <Pane className="space-y-9">
+      <Pane className="space-y-7">
         <PageHeader
           kicker="package manager"
           title="Skills & toolkit"
@@ -21,7 +21,7 @@ export function SkillsApp() {
             </>
           }
         />
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {skills.map((group, index) => (
             <Card key={group.group} className="p-5">
               <div className="flex items-center gap-2.5">
