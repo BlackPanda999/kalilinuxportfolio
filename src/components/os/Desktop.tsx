@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   Bot,
   BadgeCheck,
@@ -7,6 +7,7 @@ import {
   ImageIcon,
   Mail,
   ScrollText,
+  Search,
   Terminal as TerminalIcon,
   UserRound,
   Wrench,
@@ -15,7 +16,9 @@ import {
 import { profile } from "@/data/profile";
 import { randomWallpaperIndex, wallpapers } from "@/data/wallpapers";
 import { cn } from "@/lib/utils";
+import { CTF_BANNER } from "@/lib/ctf";
 import { BootScreen } from "./BootScreen";
+import { CommandPalette, type PaletteItem } from "./CommandPalette";
 import { Hero } from "./Hero";
 import { TopBar } from "./TopBar";
 import { Window } from "./Window";
@@ -139,11 +142,31 @@ export function Desktop() {
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [focused, setFocused] = useState<AppId | null>(null);
   const [paper, setPaper] = useState(0);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const zRef = useRef(10);
   const openCount = useRef(0);
 
   // pick a random wallpaper per page load (client-side to keep SSR stable)
   useEffect(() => setPaper(randomWallpaperIndex()), []);
+
+  // ctrl/cmd+K opens the command palette anywhere on the desktop
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setPaletteOpen((open) => !open);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // friendly easter-egg breadcrumb for anyone who opens devtools
+  useEffect(() => {
+    if (!booted) return;
+    console.info("%c" + CTF_BANNER, "color:#7aa2f7");
+    console.info("open the Terminal app and type `ctf` to play.");
+  }, [booted]);
 
   function focus(id: AppId) {
     zRef.current += 1;
