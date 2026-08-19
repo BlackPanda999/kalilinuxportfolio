@@ -284,7 +284,7 @@ export function Desktop() {
       />
 
       <div className="relative flex h-full flex-col">
-        <TopBar onOpen={open} />
+        <TopBar onOpen={open} onSearch={() => setPaletteOpen(true)} />
 
         <main className="relative min-h-0 flex-1">
           <h1 className="sr-only">
