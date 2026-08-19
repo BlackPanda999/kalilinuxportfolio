@@ -1,6 +1,7 @@
 import { Minus, Square, X } from "lucide-react";
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
 
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import type { WindowState } from "./types";
 
@@ -31,6 +32,7 @@ export function Window({
   onMove,
   onResize,
 }: WindowProps) {
+  const isMobile = useIsMobile();
   const dragRef = useRef<{ dx: number; dy: number } | null>(null);
   const resizeRef = useRef<{ x: number; y: number; w: number; h: number } | null>(null);
 
@@ -39,11 +41,17 @@ export function Window({
       if (dragRef.current) {
         const nextX = event.clientX - dragRef.current.dx;
         const nextY = event.clientY - dragRef.current.dy;
-        onMove(Math.max(0, Math.min(nextX, window.innerWidth - 180)), Math.max(34, nextY));
+        onMove(
+          Math.max(0, Math.min(nextX, window.innerWidth - 180)),
+          Math.max(34, Math.min(nextY, window.innerHeight - 90)),
+        );
       }
       if (resizeRef.current) {
         const r = resizeRef.current;
-        onResize(Math.max(340, r.w + (event.clientX - r.x)), Math.max(220, r.h + (event.clientY - r.y)));
+        onResize(
+          Math.max(300, Math.min(r.w + (event.clientX - r.x), window.innerWidth - 16)),
+          Math.max(220, Math.min(r.h + (event.clientY - r.y), window.innerHeight - 60)),
+        );
       }
     },
     [onMove, onResize],
@@ -57,15 +65,19 @@ export function Window({
   useEffect(() => {
     window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("pointerup", stopTracking);
+    window.addEventListener("pointercancel", stopTracking);
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", stopTracking);
+      window.removeEventListener("pointercancel", stopTracking);
     };
   }, [handlePointerMove, stopTracking]);
 
   if (state.minimized) return null;
 
-  const maximized = state.maximized;
+  // On phones/tablets every window becomes a full-bleed sheet: no clipping,
+  // no dragging off-screen, and comfortably large touch targets.
+  const fullBleed = isMobile || state.maximized;
 
   return (
     <section
@@ -73,63 +85,73 @@ export function Window({
       aria-label={title}
       onPointerDown={onFocus}
       className={cn(
-        "absolute flex flex-col overflow-hidden rounded-lg border window-shadow",
+        "window-shadow absolute flex flex-col overflow-hidden border",
+        fullBleed ? "rounded-none sm:rounded-lg" : "rounded-lg",
         active ? "border-primary/60" : "border-border/70",
       )}
       style={{
-        left: maximized ? 0 : state.x,
-        top: maximized ? 34 : state.y,
-        width: maximized ? "100%" : state.w,
-        height: maximized ? "calc(100% - 34px - 3.25rem)" : state.h,
+        left: fullBleed ? 0 : state.x,
+        top: fullBleed ? 34 : state.y,
+        width: fullBleed ? "100%" : state.w,
+        height: fullBleed ? "calc(100% - 34px - 3.25rem)" : state.h,
+        maxWidth: "100%",
         zIndex: state.z,
         backgroundColor: "var(--color-card)",
       }}
     >
       <header
         onPointerDown={(event) => {
-          if (maximized) return;
+          if (fullBleed) return;
           dragRef.current = { dx: event.clientX - state.x, dy: event.clientY - state.y };
         }}
-        onDoubleClick={onToggleMaximize}
+        onDoubleClick={() => {
+          if (!isMobile) onToggleMaximize();
+        }}
         className={cn(
-          "flex shrink-0 items-center gap-2 border-b px-3 py-2 select-none",
-          maximized ? "" : "cursor-grab active:cursor-grabbing",
+          "flex shrink-0 items-center gap-2 border-b px-2.5 py-2 select-none sm:px-3",
+          fullBleed ? "" : "cursor-grab touch-none active:cursor-grabbing",
         )}
         style={{ backgroundColor: "var(--color-titlebar)" }}
       >
-        <span className="text-primary [&_svg]:size-4">{icon}</span>
-        <h2 className="truncate font-mono text-xs tracking-wide text-foreground/90">{title}</h2>
-        <div className="ml-auto flex items-center gap-1.5">
+        <span className="shrink-0 text-primary [&_svg]:size-4">{icon}</span>
+        <h2 className="truncate font-mono text-[11px] tracking-wide text-foreground/90 sm:text-xs">
+          {title}
+        </h2>
+        <div className="ml-auto flex shrink-0 items-center gap-1">
           <button
             type="button"
             aria-label="Minimize window"
             onClick={onMinimize}
-            className="grid size-6 place-items-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            className="grid size-9 place-items-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground sm:size-7"
           >
-            <Minus className="size-3.5" />
+            <Minus className="size-4" />
           </button>
-          <button
-            type="button"
-            aria-label="Maximize window"
-            onClick={onToggleMaximize}
-            className="grid size-6 place-items-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            <Square className="size-3" />
-          </button>
+          {!isMobile && (
+            <button
+              type="button"
+              aria-label="Maximize window"
+              onClick={onToggleMaximize}
+              className="grid size-9 place-items-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground sm:size-7"
+            >
+              <Square className="size-3.5" />
+            </button>
+          )}
           <button
             type="button"
             aria-label="Close window"
             onClick={onClose}
-            className="grid size-6 place-items-center rounded-sm text-muted-foreground transition-colors hover:bg-destructive hover:text-destructive-foreground"
+            className="grid size-9 place-items-center rounded-sm text-muted-foreground transition-colors hover:bg-destructive hover:text-destructive-foreground sm:size-7"
           >
-            <X className="size-3.5" />
+            <X className="size-4" />
           </button>
         </div>
       </header>
 
-      <div className="term-scroll min-h-0 flex-1 overflow-auto">{children}</div>
+      <div className="term-scroll min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain">
+        {children}
+      </div>
 
-      {!maximized && (
+      {!fullBleed && (
         <button
           type="button"
           aria-label="Resize window"
@@ -137,7 +159,7 @@ export function Window({
             event.stopPropagation();
             resizeRef.current = { x: event.clientX, y: event.clientY, w: state.w, h: state.h };
           }}
-          className="absolute right-0 bottom-0 size-4 cursor-se-resize"
+          className="absolute right-0 bottom-0 size-5 cursor-se-resize touch-none"
         />
       )}
     </section>
