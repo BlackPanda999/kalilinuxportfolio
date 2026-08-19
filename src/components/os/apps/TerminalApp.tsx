@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { certifications, experience, profile, projects, skills } from "@/data/profile";
+import { CTF_BANNER, FLAG_ENCODED, HINTS, isFlag, markSolved } from "@/lib/ctf";
 import type { AppId } from "../types";
 
 type Line = { kind: "in" | "out"; text: string };
@@ -18,6 +19,7 @@ const HELP = [
   "  contact           contact details",
   "  open <app>        open a window (about, projects, certifications, experience, skills, cv, contact, ai)",
   "  ai <question>     ask the AI assistant about Osama",
+  "  ctf               start the 'who am i?' recon puzzle",
   "  clear             clear the screen",
 ].join("\n");
 
@@ -69,7 +71,77 @@ export function TerminalApp({ onOpen }: { onOpen: (id: AppId) => void }) {
       case "ls":
         next.push({
           kind: "out",
-          text: "about_me.txt  projects/  certifications/  experience.log  skills/  cv/  contact.conf  panda-ai",
+          text:
+            arg === "-la" || arg === "-a" || arg === "-al"
+              ? [
+                  "total 9",
+                  "drwxr-xr-x  blackpanda999  .",
+                  "drwxr-xr-x  root           ..",
+                  "-r--------  blackpanda999  .flag        <- interesting",
+                  "-rw-r--r--  blackpanda999  about_me.txt",
+                  "drwxr-xr-x  blackpanda999  projects/",
+                  "drwxr-xr-x  blackpanda999  certifications/",
+                  "-rw-r--r--  blackpanda999  experience.log",
+                  "drwxr-xr-x  blackpanda999  skills/",
+                  "drwxr-xr-x  blackpanda999  cv/",
+                  "-rw-r--r--  blackpanda999  contact.conf",
+                ].join("\n")
+              : "about_me.txt  projects/  certifications/  experience.log  skills/  cv/  contact.conf  panda-ai",
+        });
+        break;
+      case "ctf":
+        next.push({ kind: "out", text: CTF_BANNER });
+        break;
+      case "hint":
+        next.push({ kind: "out", text: HINTS.join("\n") });
+        break;
+      case "cat":
+        if (arg === ".flag" || arg === "flag") {
+          next.push({
+            kind: "out",
+            text: "cat: .flag: binary file — try `hexdump .flag`",
+          });
+        } else if (arg === "contact.conf") {
+          next.push({ kind: "out", text: `email = ${profile.email}\nphone = ${profile.phone}` });
+        } else if (arg === "about_me.txt") {
+          next.push({ kind: "out", text: profile.summary });
+        } else {
+          next.push({ kind: "out", text: `cat: ${arg || "missing operand"}: no such file` });
+        }
+        break;
+      case "hexdump":
+      case "xxd":
+        if (arg === ".flag" || arg === "flag") {
+          next.push({
+            kind: "out",
+            text: `00000000  base64: ${FLAG_ENCODED}\n// decode it, then run: submit <flag>`,
+          });
+        } else {
+          next.push({ kind: "out", text: `hexdump: ${arg || "missing operand"}: no such file` });
+        }
+        break;
+      case "submit":
+        if (isFlag(rest.join(" "))) {
+          markSolved();
+          next.push({
+            kind: "out",
+            text: [
+              "",
+              "  ██  flag accepted — nice recon, hacker.  ██",
+              "",
+              `you found out who I am: ${profile.name}.`,
+              "hire me before someone else does: type `open contact`.",
+              "",
+            ].join("\n"),
+          });
+        } else {
+          next.push({ kind: "out", text: "submit: wrong flag. format is PANDA{...} — type `hint`." });
+        }
+        break;
+      case "sudo":
+        next.push({
+          kind: "out",
+          text: `${profile.handle} is not in the sudoers file. This incident has been logged. :)`,
         });
         break;
       case "projects":
