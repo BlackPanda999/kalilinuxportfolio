@@ -36,12 +36,11 @@ export function CommandPalette({
   }, [items, query]);
 
   useEffect(() => {
-    if (open) {
-      setQuery("");
-      setActive(0);
-      const focus = setTimeout(() => inputRef.current?.focus(), 20);
-      return () => clearTimeout(focus);
-    }
+    if (!open) return undefined;
+    setQuery("");
+    setActive(0);
+    const focus = setTimeout(() => inputRef.current?.focus(), 20);
+    return () => clearTimeout(focus);
   }, [open]);
 
   useEffect(() => setActive(0), [query]);

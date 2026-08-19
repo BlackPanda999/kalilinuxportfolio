@@ -222,3 +222,120 @@
 @utility text-glow {
   text-shadow: 0 0 12px color-mix(in oklab, var(--color-shell) 55%, transparent);
 }
+
+/* softer scanline overlay for chrome/dialogs */
+@utility scanlines-soft {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      oklch(1 0 0 / 0.014) 0px,
+      oklch(1 0 0 / 0.014) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  }
+}
+
+/* ambient bloom behind panes — adds depth without hiding content */
+@utility ambient-glow {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(
+        60% 45% at 15% 0%,
+        color-mix(in oklab, var(--color-primary) 12%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        45% 40% at 100% 100%,
+        color-mix(in oklab, var(--color-shell) 9%, transparent),
+        transparent 70%
+      );
+  }
+  & > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* monospace kicker used above section headings */
+@utility term-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-shell) 85%, transparent);
+}
+
+/* long-form body copy inside windows — website-grade rhythm */
+@utility prose-term {
+  & p,
+  & li {
+    font-size: 0.94rem;
+    line-height: 1.85;
+    letter-spacing: 0.004em;
+  }
+  & h2,
+  & h3,
+  & h4 {
+    font-family: var(--font-sans);
+    text-wrap: balance;
+  }
+}
+
+/* boot logo pulse */
+@utility boot-pulse {
+  animation: boot-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes boot-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 10px color-mix(in oklab, var(--color-primary) 55%, transparent));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 26px color-mix(in oklab, var(--color-primary) 80%, transparent));
+  }
+}
+
+/* slow CRT-style flicker for the boot screen */
+@utility crt-flicker {
+  animation: crt-flicker 6.5s ease-in-out infinite;
+}
+
+@keyframes crt-flicker {
+  0%,
+  96%,
+  100% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 0.93;
+  }
+  98.5% {
+    opacity: 0.97;
+  }
+}
+
+/* spinning boot ring */
+@utility boot-ring {
+  animation: boot-ring 1.1s linear infinite;
+}
+
+@keyframes boot-ring {
+  to {
+    transform: rotate(360deg);
+  }
+}

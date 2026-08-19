@@ -6,6 +6,7 @@ import {
   Lock,
   Monitor,
   Power,
+  Search,
   ShieldCheck,
   Terminal as TerminalIcon,
   UserRound,
@@ -22,7 +23,13 @@ const QUICK: { id: AppId; label: string; icon: typeof Bot }[] = [
   { id: "ai", label: "Ask AI", icon: Bot },
 ];
 
-export function TopBar({ onOpen }: { onOpen?: (id: AppId) => void }) {
+export function TopBar({
+  onOpen,
+  onSearch,
+}: {
+  onOpen?: (id: AppId) => void;
+  onSearch?: () => void;
+}) {
   const [now, setNow] = useState<Date | null>(null);
   const [workspace, setWorkspace] = useState(1);
 
@@ -37,7 +44,8 @@ export function TopBar({ onOpen }: { onOpen?: (id: AppId) => void }) {
       {/* launcher */}
       <button
         type="button"
-        title="PandaOS menu"
+        title="PandaOS menu — search apps (Ctrl+K)"
+        onClick={onSearch}
         className="flex items-center gap-1.5 rounded px-1.5 py-1 text-primary transition-colors hover:bg-primary/15"
       >
         <ShieldCheck className="size-4" />
@@ -84,7 +92,20 @@ export function TopBar({ onOpen }: { onOpen?: (id: AppId) => void }) {
 
       <span className="h-4 w-px bg-border/70" />
 
-      <span className="hidden truncate text-muted-foreground md:inline">
+      <button
+        type="button"
+        onClick={onSearch}
+        title="Search apps and commands (Ctrl+K)"
+        className="hidden items-center gap-1.5 rounded px-2 py-1 text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-foreground sm:flex"
+      >
+        <Search className="size-3.5" />
+        <span className="hidden md:inline">search</span>
+        <kbd className="hidden rounded border border-border/70 px-1 text-[9.5px] md:inline">
+          ctrl k
+        </kbd>
+      </button>
+
+      <span className="hidden truncate text-muted-foreground lg:inline">
         blackpanda999@kali: ~
       </span>
 

@@ -7,7 +7,7 @@ export function CvApp() {
   return (
     <div>
       <PathBar path={`/home/blackpanda999/cv/ — ${cvFiles.length} items`} />
-      <Pane className="space-y-8">
+      <Pane className="space-y-7">
         <PageHeader
           kicker="documents"
           title="Résumés"
