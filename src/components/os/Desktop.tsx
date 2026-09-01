@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   Bot,
   BadgeCheck,
@@ -7,7 +7,6 @@ import {
   ImageIcon,
   Mail,
   ScrollText,
-  Search,
   Terminal as TerminalIcon,
   UserRound,
   Wrench,
@@ -18,7 +17,6 @@ import { randomWallpaperIndex, wallpapers } from "@/data/wallpapers";
 import { cn } from "@/lib/utils";
 import { CTF_BANNER } from "@/lib/ctf";
 import { BootScreen } from "./BootScreen";
-import { CommandPalette, type PaletteItem } from "./CommandPalette";
 import { Hero } from "./Hero";
 import { TopBar } from "./TopBar";
 import { Window } from "./Window";
@@ -142,24 +140,12 @@ export function Desktop() {
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [focused, setFocused] = useState<AppId | null>(null);
   const [paper, setPaper] = useState(0);
-  const [paletteOpen, setPaletteOpen] = useState(false);
   const zRef = useRef(10);
   const openCount = useRef(0);
 
   // pick a random wallpaper per page load (client-side to keep SSR stable)
   useEffect(() => setPaper(randomWallpaperIndex()), []);
 
-  // ctrl/cmd+K opens the command palette anywhere on the desktop
-  useEffect(() => {
-    function onKey(event: KeyboardEvent) {
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        setPaletteOpen((open) => !open);
-      }
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
 
   // friendly easter-egg breadcrumb for anyone who opens devtools
   useEffect(() => {
@@ -233,34 +219,8 @@ export function Desktop() {
     [],
   );
 
-  const paletteItems = useMemo<PaletteItem[]>(
-    () => [
-      ...APPS.map((app) => ({
-        id: app.id,
-        label: app.label,
-        hint: app.title,
-        keywords: `${app.hint} ${app.id} open launch window`,
-        icon: app.icon,
-      })),
-      {
-        id: "wallpaper" as const,
-        label: "Change wallpaper",
-        hint: "cycle desktop background",
-        keywords: "theme background image paper",
-        icon: <ImageIcon />,
-      },
-    ],
-    [],
-  );
 
-  const runPalette = useCallback((id: PaletteItem["id"]) => {
-    if (id === "wallpaper") {
-      setPaper((p) => (p + 1) % wallpapers.length);
-      return;
-    }
-    open(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
 
   if (!booted) return <BootScreen onDone={() => setBooted(true)} />;
 
@@ -284,7 +244,7 @@ export function Desktop() {
       />
 
       <div className="relative flex h-full flex-col">
-        <TopBar onOpen={open} onSearch={() => setPaletteOpen(true)} />
+        <TopBar onOpen={open} onWallpaper={() => setPaper((p) => (p + 1) % wallpapers.length)} />
 
         <main className="relative min-h-0 flex-1">
           <h1 className="sr-only">
@@ -296,41 +256,31 @@ export function Desktop() {
             <div className="flex w-full max-w-4xl flex-col items-center gap-6 sm:gap-8">
               <Hero />
 
-              <button
-                type="button"
-                onClick={() => setPaletteOpen(true)}
-                className="group flex w-full max-w-sm items-center gap-2.5 rounded-xl border border-border/70 bg-card/40 px-4 py-2.5 font-mono text-[11.5px] text-muted-foreground backdrop-blur-md transition-colors hover:border-primary/60 hover:text-foreground"
-              >
-                <Search className="size-3.5 text-primary" />
-                <span className="flex-1 text-left">search apps &amp; commands…</span>
-                <kbd className="rounded border border-border/70 px-1.5 py-0.5 text-[10px]">
-                  ctrl k
-                </kbd>
-              </button>
 
-              <ul className="grid grid-cols-3 gap-2.5 sm:grid-cols-5 sm:gap-5">
+
+
+              <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-6">
                 {APPS.map((app, i) => (
                   <li key={app.id} className="icon-pop" style={{ animationDelay: `${i * 55}ms` }}>
                     <button
                       type="button"
                       onDoubleClick={() => open(app.id)}
                       onClick={() => open(app.id)}
-                      className="group flex w-[5.75rem] flex-col items-center gap-2 rounded-xl p-2 focus-visible:outline-none sm:w-24"
+                      className="group flex w-[5.75rem] flex-col items-center gap-2 rounded-xl p-1.5 focus-visible:outline-none sm:w-[6.25rem]"
                     >
                       <span
                         className={cn(
-                          "icon-3d relative grid size-16 place-items-center rounded-2xl border border-border/70 backdrop-blur-md",
-                          "transition-transform duration-300 ease-out will-change-transform",
-                          "group-hover:-translate-y-1.5 group-hover:scale-110 group-active:scale-95",
+                          "icon-3d icon-sheen relative grid size-[4.25rem] place-items-center rounded-[1.35rem] border border-foreground/12 backdrop-blur-xl",
+                          "transition-all duration-300 ease-out will-change-transform",
+                          "group-hover:-translate-y-2 group-hover:scale-[1.12] group-hover:rotate-[-2deg] group-active:scale-95",
                           "group-hover:border-primary/70 group-hover:glow-primary group-focus-visible:border-primary",
-                          "[&_svg]:size-7 [&_svg]:drop-shadow-[0_2px_3px_oklch(0_0_0/0.6)] [&_svg]:stroke-[1.9]",
+                          "[&_svg]:size-8 [&_svg]:drop-shadow-[0_3px_5px_oklch(0_0_0/0.65)] [&_svg]:stroke-[1.85]",
                           app.tone,
                         )}
                       >
-                        <span className="absolute inset-x-3 top-0.5 h-px rounded-full bg-foreground/25" />
                         {app.icon}
                       </span>
-                      <span className="font-sans text-[11px] font-medium leading-tight text-foreground/90 transition-colors group-hover:text-primary">
+                      <span className="rounded-md bg-background/35 px-1.5 py-0.5 font-sans text-[11.5px] leading-tight font-medium text-foreground/95 backdrop-blur-sm transition-colors group-hover:text-primary">
                         {app.label}
                       </span>
                       <span className="font-mono text-[9.5px] text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
@@ -340,6 +290,7 @@ export function Desktop() {
                   </li>
                 ))}
               </ul>
+
             </div>
           </div>
 
@@ -396,15 +347,8 @@ export function Desktop() {
               );
             })}
           </ul>
-          <button
-            type="button"
-            onClick={() => setPaletteOpen(true)}
-            title="Command palette (Ctrl+K)"
-            className="flex shrink-0 items-center gap-2 rounded-md border border-border/60 px-2.5 py-1.5 font-mono text-[11px] text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary [&_svg]:size-4"
-          >
-            <Search />
-            <span className="hidden sm:inline">search</span>
-          </button>
+
+
           <button
             type="button"
             onClick={() => setPaper((p) => (p + 1) % wallpapers.length)}
@@ -416,13 +360,7 @@ export function Desktop() {
           </button>
         </footer>
       </div>
-
-      <CommandPalette
-        open={paletteOpen}
-        items={paletteItems}
-        onClose={() => setPaletteOpen(false)}
-        onRun={runPalette}
-      />
     </div>
+
   );
 }
