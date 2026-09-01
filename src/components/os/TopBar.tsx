@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import {
+  BatteryFull,
   Bell,
   Bot,
+  Cpu,
   FolderClosed,
+  ImageIcon,
   Lock,
-  Monitor,
-  Power,
-  Search,
   ShieldCheck,
   Terminal as TerminalIcon,
   UserRound,
   Volume2,
+  Wifi,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -25,10 +26,10 @@ const QUICK: { id: AppId; label: string; icon: typeof Bot }[] = [
 
 export function TopBar({
   onOpen,
-  onSearch,
+  onWallpaper,
 }: {
   onOpen?: (id: AppId) => void;
-  onSearch?: () => void;
+  onWallpaper?: () => void;
 }) {
   const [now, setNow] = useState<Date | null>(null);
   const [workspace, setWorkspace] = useState(1);
@@ -40,20 +41,18 @@ export function TopBar({
   }, []);
 
   return (
-    <header className="panel-blur relative z-[9000] flex h-[36px] items-center gap-1.5 border-b border-border/60 px-2 font-mono text-[11px] text-panel-foreground">
-      {/* launcher */}
-      <button
-        type="button"
-        title="PandaOS menu — search apps (Ctrl+K)"
-        onClick={onSearch}
-        className="flex items-center gap-1.5 rounded px-1.5 py-1 text-primary transition-colors hover:bg-primary/15"
-      >
+    <header className="panel-blur scanlines-soft relative z-[9000] flex h-[2.35rem] items-center gap-1.5 border-b border-border/60 px-2 font-mono text-[11px] text-panel-foreground">
+      {/* distro mark */}
+      <span className="flex items-center gap-1.5 rounded-md bg-primary/12 px-2 py-1 text-primary">
         <ShieldCheck className="size-4" />
-      </button>
+        <span className="hidden text-[10.5px] font-semibold tracking-[0.16em] sm:inline">
+          PandaOS 26.04
+        </span>
+      </span>
 
       <span className="h-4 w-px bg-border/70" />
 
-      {/* quick-launch tray */}
+      {/* quick-launch dock */}
       <div className="flex items-center gap-0.5">
         {QUICK.map((item) => (
           <button
@@ -61,7 +60,7 @@ export function TopBar({
             type="button"
             title={item.label}
             onClick={() => onOpen?.(item.id)}
-            className="grid size-7 place-items-center rounded text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-foreground [&_svg]:size-4"
+            className="grid size-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-primary [&_svg]:size-4"
           >
             <item.icon />
           </button>
@@ -71,7 +70,7 @@ export function TopBar({
       <span className="h-4 w-px bg-border/70" />
 
       {/* workspaces */}
-      <div className="flex items-center gap-0.5">
+      <div className="flex items-center gap-1 rounded-md bg-secondary/40 px-1 py-0.5">
         {[1, 2, 3, 4].map((n) => (
           <button
             key={n}
@@ -79,42 +78,36 @@ export function TopBar({
             title={`Workspace ${n}`}
             onClick={() => setWorkspace(n)}
             className={cn(
-              "size-6 rounded text-center leading-6 transition-colors",
+              "size-2 rounded-full transition-all",
               workspace === n
-                ? "bg-primary/20 text-primary"
-                : "text-muted-foreground hover:bg-secondary/70 hover:text-foreground",
+                ? "w-5 bg-primary shadow-[0_0_8px_var(--color-primary)]"
+                : "bg-muted-foreground/50 hover:bg-muted-foreground",
             )}
           >
-            {n}
+            <span className="sr-only">{n}</span>
           </button>
         ))}
       </div>
 
-      <span className="h-4 w-px bg-border/70" />
-
-      <button
-        type="button"
-        onClick={onSearch}
-        title="Search apps and commands (Ctrl+K)"
-        className="hidden items-center gap-1.5 rounded px-2 py-1 text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-foreground sm:flex"
-      >
-        <Search className="size-3.5" />
-        <span className="hidden md:inline">search</span>
-        <kbd className="hidden rounded border border-border/70 px-1 text-[9.5px] md:inline">
-          ctrl k
-        </kbd>
-      </button>
-
-      <span className="hidden truncate text-muted-foreground lg:inline">
+      <span className="ml-2 hidden truncate text-muted-foreground lg:inline">
         blackpanda999@kali: ~
       </span>
 
       {/* right status tray */}
-      <div className="ml-auto flex items-center gap-1">
-        <span className="mr-1 hidden h-1 w-16 overflow-hidden rounded-full bg-secondary/80 sm:block">
-          <span className="block h-full w-1/2 rounded-full bg-primary" />
+      <div className="ml-auto flex items-center gap-1.5">
+        <span className="hidden items-center gap-1 text-shell md:flex">
+          <Cpu className="size-3.5" />
+          <span className="text-[10px]">7%</span>
         </span>
-        {[Monitor, Volume2, Bell, Power].map((Icon, i) => (
+        <button
+          type="button"
+          onClick={onWallpaper}
+          title="Change wallpaper"
+          className="grid size-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-primary [&_svg]:size-3.5"
+        >
+          <ImageIcon />
+        </button>
+        {[Wifi, Volume2, Bell, BatteryFull].map((Icon, i) => (
           <span
             key={i}
             className="grid size-6 place-items-center text-muted-foreground [&_svg]:size-3.5"
