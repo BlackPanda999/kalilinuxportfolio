@@ -2,16 +2,24 @@ import { useEffect, useState } from "react";
 
 import { profile } from "@/data/profile";
 
-const LINES = [
-  "GRUB 2.12 — booting PandaOS (kali-rolling) …",
-  "[  OK  ] Started Secure Kernel 6.8.0-kali-amd64",
-  "[  OK  ] Mounted /dev/portfolio on /home/blackpanda999",
-  "[  OK  ] Loaded module: pentest_toolkit (burp, nmap, metasploit)",
-  "[  OK  ] Started Elastic SIEM agent — telemetry streaming",
-  "[  OK  ] Firewall ruleset applied · WPA3 · MFA enforced",
-  "[  OK  ] panda-ai assistant online",
-  "[  OK  ] Started Display Manager (pandadm)",
-  "[  OK  ] Reached target Graphical Interface",
+/** kernel-style log lines with dmesg timestamps */
+const KERNEL = [
+  "Linux version 6.12.0-pandaos-amd64 (gcc 14.2.0) #1 SMP PREEMPT_DYNAMIC",
+  "Command line: BOOT_IMAGE=/vmlinuz root=/dev/portfolio ro quiet splash",
+  "smpboot: CPU0: AMD Ryzen 9 (family 0x19) — 16 cores online",
+  "Memory: 32768MB available / secure boot: enabled / TPM 2.0: ok",
+  "EXT4-fs (nvme0n1p2): mounted filesystem with ordered data mode",
+  "random: crng init done",
+];
+
+const SERVICES = [
+  "Reached target Basic System.",
+  "Started Load Kernel Modules (pentest_toolkit: nmap, burp, metasploit).",
+  "Started Network Manager — WPA3 · MFA enforced · VPN tunnel up.",
+  "Started Elastic SIEM agent — telemetry streaming.",
+  "Started panda-ai assistant daemon.",
+  "Started Display Manager (pandadm).",
+  "Reached target Graphical Interface.",
 ];
 
 /** Panda / dragon-style distro mark, drawn inline so it needs no asset. */
@@ -24,23 +32,27 @@ function PandaLogo({ className }: { className?: string }) {
           <stop offset="100%" stopColor="var(--color-shell)" />
         </linearGradient>
       </defs>
-      <circle cx="32" cy="32" r="29" fill="none" stroke="url(#pandaMark)" strokeWidth="1.4" opacity="0.5" />
-      {/* ears */}
+      <circle
+        cx="32"
+        cy="32"
+        r="29"
+        fill="none"
+        stroke="url(#pandaMark)"
+        strokeWidth="1.4"
+        opacity="0.5"
+      />
       <circle cx="17" cy="18" r="8" fill="url(#pandaMark)" opacity="0.9" />
       <circle cx="47" cy="18" r="8" fill="url(#pandaMark)" opacity="0.9" />
-      {/* head */}
       <path
         d="M32 12c11 0 19 8.5 19 19.5S43 51 32 51 13 42.5 13 31.5 21 12 32 12z"
         fill="none"
         stroke="url(#pandaMark)"
         strokeWidth="2.2"
       />
-      {/* eyes */}
       <ellipse cx="24" cy="30" rx="4.6" ry="5.6" fill="url(#pandaMark)" />
       <ellipse cx="40" cy="30" rx="4.6" ry="5.6" fill="url(#pandaMark)" />
       <circle cx="24" cy="29.5" r="1.5" fill="var(--color-terminal)" />
       <circle cx="40" cy="29.5" r="1.5" fill="var(--color-terminal)" />
-      {/* snout */}
       <path
         d="M27 40.5c1.6 2.4 8 2.4 9.6 0"
         fill="none"
@@ -53,41 +65,91 @@ function PandaLogo({ className }: { className?: string }) {
   );
 }
 
+type Phase = "grub" | "kernel" | "services" | "splash";
+
 export function BootScreen({ onDone }: { onDone: () => void }) {
-  const [phase, setPhase] = useState<"post" | "logo" | "log">("post");
-  const [shown, setShown] = useState(0);
+  const [phase, setPhase] = useState<Phase>("grub");
+  const [kernel, setKernel] = useState(0);
+  const [svc, setSvc] = useState(0);
 
-  // BIOS/POST → distro logo splash → systemd log
+  // GRUB menu → kernel dmesg → systemd services → plymouth splash → desktop
   useEffect(() => {
-    if (phase !== "post") return undefined;
-    const next = setTimeout(() => setPhase("logo"), 700);
-    return () => clearTimeout(next);
+    if (phase !== "grub") return undefined;
+    const t = setTimeout(() => setPhase("kernel"), 1150);
+    return () => clearTimeout(t);
   }, [phase]);
 
   useEffect(() => {
-    if (phase !== "logo") return undefined;
-    const next = setTimeout(() => setPhase("log"), 1500);
-    return () => clearTimeout(next);
-  }, [phase]);
-
-  useEffect(() => {
-    if (phase !== "log") return undefined;
-    if (shown >= LINES.length) {
-      const done = setTimeout(onDone, 620);
-      return () => clearTimeout(done);
+    if (phase !== "kernel") return undefined;
+    if (kernel >= KERNEL.length) {
+      const t = setTimeout(() => setPhase("services"), 260);
+      return () => clearTimeout(t);
     }
-    const next = setTimeout(() => setShown((value) => value + 1), shown === 0 ? 240 : 150);
-    return () => clearTimeout(next);
-  }, [phase, shown, onDone]);
+    const t = setTimeout(() => setKernel((n) => n + 1), 130);
+    return () => clearTimeout(t);
+  }, [phase, kernel]);
 
-  const pct = phase === "log" ? Math.round((shown / LINES.length) * 100) : 0;
+  useEffect(() => {
+    if (phase !== "services") return undefined;
+    if (svc >= SERVICES.length) {
+      const t = setTimeout(() => setPhase("splash"), 320);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setSvc((n) => n + 1), 165);
+    return () => clearTimeout(t);
+  }, [phase, svc]);
+
+  useEffect(() => {
+    if (phase !== "splash") return undefined;
+    const t = setTimeout(onDone, 1600);
+    return () => clearTimeout(t);
+  }, [phase, onDone]);
+
+  const stamp = (i: number) => `[    ${(0.4821 + i * 0.1734).toFixed(6)}]`;
 
   return (
     <div
-      className="scanlines crt-flicker flex h-screen w-full flex-col justify-center px-5 font-mono text-[12px] sm:px-16 sm:text-[13px]"
+      className="scanlines crt-flicker relative flex h-screen w-full flex-col overflow-hidden px-4 py-5 font-mono text-[11.5px] sm:px-12 sm:text-[12.5px]"
       style={{ backgroundColor: "var(--color-terminal)" }}
     >
-      {phase === "logo" ? (
+      {phase === "grub" && (
+        <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center">
+          <p className="mb-2 text-center text-muted-foreground">GNU GRUB version 2.12</p>
+          <div className="border border-border/80 p-3">
+            <p className="bg-primary/85 px-2 py-0.5 text-primary-foreground">
+              PandaOS GNU/Linux 26.04 (kali-rolling)
+            </p>
+            <p className="px-2 py-0.5 text-muted-foreground">
+              Advanced options for PandaOS GNU/Linux
+            </p>
+            <p className="px-2 py-0.5 text-muted-foreground">Memory test (memtest86+)</p>
+            <p className="px-2 py-0.5 text-muted-foreground">UEFI Firmware Settings</p>
+          </div>
+          <p className="mt-3 text-center text-[10.5px] text-muted-foreground">
+            The highlighted entry will be executed automatically in 1s.
+          </p>
+        </div>
+      )}
+
+      {(phase === "kernel" || phase === "services") && (
+        <ul className="flex-1 space-y-0.5">
+          {KERNEL.slice(0, kernel).map((line, i) => (
+            <li key={line} className="break-words text-muted-foreground">
+              <span className="text-shell-dim">{stamp(i)}</span> {line}
+            </li>
+          ))}
+          {SERVICES.slice(0, svc).map((line) => (
+            <li key={line} className="break-words text-muted-foreground">
+              <span className="text-shell">[ OK ]</span> {line}
+            </li>
+          ))}
+          <li className="text-primary">
+            <span className="caret-blink">█</span>
+          </li>
+        </ul>
+      )}
+
+      {phase === "splash" && (
         <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
           <PandaLogo className="boot-pulse size-24 sm:size-32" />
           <div>
@@ -95,60 +157,28 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
               Panda<span className="text-primary">OS</span>
             </p>
             <p className="mt-1 text-[11px] tracking-[0.34em] text-shell uppercase">
-              kali rolling · secure edition
+              26.04 · secure edition
             </p>
           </div>
-          <span className="boot-ring size-7 rounded-full border-2 border-border border-t-primary" />
+          <div className="flex items-center gap-2">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <span
+                key={i}
+                className="boot-dot size-2 rounded-full bg-primary"
+                style={{ animationDelay: `${i * 130}ms` }}
+              />
+            ))}
+          </div>
           <p className="text-[11px] text-muted-foreground">
-            starting {profile.name.toLowerCase().replace(" ", "_")} session …
+            login: {profile.handle} — starting desktop session …
           </p>
         </div>
-      ) : (
-        <>
-          <div className="flex items-center gap-3">
-            <PandaLogo className="size-8 shrink-0 sm:size-10" />
-            <p className="text-muted-foreground">
-              PandaOS BIOS v9.99 · POST ok · mem 32768MB · secure boot{" "}
-              <span className="text-shell">enabled</span>
-            </p>
-          </div>
-          <p className="mt-3 text-shell">
-            root@{profile.handle}:~$ <span className="text-foreground">./boot_osama_khan.sh</span>
-          </p>
-          <ul className="mt-4 space-y-1">
-            {LINES.slice(0, shown).map((line) => (
-              <li key={line} className="break-words text-muted-foreground">
-                <span className="text-shell">{line.slice(0, 8)}</span>
-                {line.slice(8)}
-              </li>
-            ))}
-            {shown < LINES.length && (
-              <li className="text-primary">
-                <span className="caret-blink">█</span>
-              </li>
-            )}
-          </ul>
-          <div className="mt-6 flex max-w-md items-center gap-3">
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
-              <div
-                className="h-full rounded-full bg-primary transition-[width] duration-200"
-                style={{ width: `${pct}%` }}
-              />
-            </div>
-            <span className="w-10 text-right text-xs text-primary">{pct}%</span>
-          </div>
-          {shown >= LINES.length && (
-            <p className="mt-4 text-xs text-shell">
-              login: {profile.handle} · session: PandaOS desktop — starting …
-            </p>
-          )}
-        </>
       )}
 
       <button
         type="button"
         onClick={onDone}
-        className="mt-8 min-h-11 w-fit self-start rounded-sm border border-border px-4 py-2 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+        className="mt-4 min-h-11 w-fit self-start rounded-sm border border-border px-4 py-2 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
       >
         skip boot →
       </button>
