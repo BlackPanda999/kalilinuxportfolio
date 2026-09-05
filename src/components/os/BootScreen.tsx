@@ -148,28 +148,37 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
             <p className="px-2 py-0.5 text-muted-foreground">UEFI Firmware Settings</p>
           </div>
           <p className="mt-3 text-center text-[10.5px] text-muted-foreground">
-            The highlighted entry will be executed automatically in 1s.
+            The highlighted entry will be executed automatically in {Math.max(countdown, 0)}s.
           </p>
         </div>
       )}
 
       {(phase === "kernel" || phase === "services") && (
-        <ul className="flex-1 space-y-0.5">
-          {KERNEL.slice(0, kernel).map((line, i) => (
-            <li key={line} className="break-words text-muted-foreground">
-              <span className="text-shell-dim">{stamp(i)}</span> {line}
+        <div className="flex min-h-0 flex-1 flex-col">
+          <ul className="term-scroll min-h-0 flex-1 space-y-0.5 overflow-y-auto">
+            {KERNEL.slice(0, kernel).map((line, i) => (
+              <li key={line} className="break-words text-muted-foreground">
+                <span className="text-shell-dim">{stamp(i)}</span> {line}
+              </li>
+            ))}
+            {SERVICES.slice(0, svc).map((line) => (
+              <li key={line} className="break-words text-muted-foreground">
+                <span className="text-shell">[ OK ]</span> {line}
+              </li>
+            ))}
+            <li className="text-primary">
+              <span className="caret-blink">█</span>
             </li>
-          ))}
-          {SERVICES.slice(0, svc).map((line) => (
-            <li key={line} className="break-words text-muted-foreground">
-              <span className="text-shell">[ OK ]</span> {line}
-            </li>
-          ))}
-          <li className="text-primary">
-            <span className="caret-blink">█</span>
-          </li>
-        </ul>
+          </ul>
+          <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-border/50">
+            <div
+              className="h-full rounded-full bg-primary transition-[width] duration-200"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
       )}
+
 
       {phase === "splash" && (
         <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
