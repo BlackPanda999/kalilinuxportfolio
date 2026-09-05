@@ -209,10 +209,13 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
       <button
         type="button"
         onClick={onDone}
-        className="mt-4 min-h-11 w-fit self-start rounded-sm border border-border px-4 py-2 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+        title="Skip the boot sequence and go to the desktop"
+        aria-label="Skip boot and go to desktop"
+        className="mt-4 min-h-11 w-fit self-start rounded-md border border-border bg-background/40 px-4 py-2 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
       >
-        skip boot →
+        skip to desktop → <span className="hidden sm:inline text-shell-dim">(esc)</span>
       </button>
+
     </div>
   );
 }
