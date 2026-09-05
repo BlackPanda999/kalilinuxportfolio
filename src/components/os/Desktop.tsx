@@ -274,20 +274,23 @@ export function Desktop() {
                       type="button"
                       onDoubleClick={() => open(app.id)}
                       onClick={() => open(app.id)}
-                      className="group flex w-[5.75rem] flex-col items-center gap-2 rounded-xl p-1.5 focus-visible:outline-none sm:w-[6.25rem]"
+                      title={`Open ${app.label} (${app.hint})`}
+                      aria-label={`Open ${app.label}`}
+                      className="group relative flex w-[5.75rem] flex-col items-center gap-2 rounded-xl p-1.5 focus-visible:outline-none sm:w-[6.25rem]"
                     >
                       <span
                         className={cn(
-                          "icon-3d icon-sheen relative grid size-[4.25rem] place-items-center rounded-[1.35rem] border border-foreground/12 backdrop-blur-xl",
+                          "icon-3d icon-sheen icon-bezel relative grid size-[4.25rem] place-items-center rounded-[1.4rem] border border-foreground/12 backdrop-blur-xl",
                           "transition-all duration-300 ease-out will-change-transform",
                           "group-hover:-translate-y-2 group-hover:scale-[1.12] group-hover:rotate-[-2deg] group-active:scale-95",
                           "group-hover:border-primary/70 group-hover:glow-primary group-focus-visible:border-primary",
-                          "[&_svg]:size-8 [&_svg]:drop-shadow-[0_3px_5px_oklch(0_0_0/0.65)] [&_svg]:stroke-[1.85]",
+                          "[&_svg]:size-8 [&_svg]:drop-shadow-[0_3px_6px_oklch(0_0_0/0.7)] [&_svg]:stroke-[1.9]",
                           app.tone,
                         )}
                       >
                         {app.icon}
                       </span>
+
                       <span className="rounded-md bg-background/35 px-1.5 py-0.5 font-sans text-[11.5px] leading-tight font-medium text-foreground/95 backdrop-blur-sm transition-colors group-hover:text-primary">
                         {app.label}
                       </span>
