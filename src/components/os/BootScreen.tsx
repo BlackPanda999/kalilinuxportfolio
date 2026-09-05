@@ -71,47 +71,69 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
   const [phase, setPhase] = useState<Phase>("grub");
   const [kernel, setKernel] = useState(0);
   const [svc, setSvc] = useState(0);
+  const [countdown, setCountdown] = useState(3);
 
-  // GRUB menu → kernel dmesg → systemd services → plymouth splash → desktop
+  // any key / Esc skips straight to the desktop, like a real splash
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") onDone();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onDone]);
+
+  // GRUB menu (3s countdown) → kernel dmesg → systemd services → splash → desktop
   useEffect(() => {
     if (phase !== "grub") return undefined;
-    const t = setTimeout(() => setPhase("kernel"), 1150);
+    if (countdown <= 0) {
+      const t = setTimeout(() => setPhase("kernel"), 220);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setCountdown((n) => n - 1), 620);
     return () => clearTimeout(t);
-  }, [phase]);
+  }, [phase, countdown]);
 
   useEffect(() => {
     if (phase !== "kernel") return undefined;
     if (kernel >= KERNEL.length) {
-      const t = setTimeout(() => setPhase("services"), 260);
+      const t = setTimeout(() => setPhase("services"), 300);
       return () => clearTimeout(t);
     }
-    const t = setTimeout(() => setKernel((n) => n + 1), 130);
+    // uneven cadence reads like real kernel output
+    const t = setTimeout(() => setKernel((n) => n + 1), 90 + (kernel % 3) * 85);
     return () => clearTimeout(t);
   }, [phase, kernel]);
 
   useEffect(() => {
     if (phase !== "services") return undefined;
     if (svc >= SERVICES.length) {
-      const t = setTimeout(() => setPhase("splash"), 320);
+      const t = setTimeout(() => setPhase("splash"), 340);
       return () => clearTimeout(t);
     }
-    const t = setTimeout(() => setSvc((n) => n + 1), 165);
+    const t = setTimeout(() => setSvc((n) => n + 1), 120 + (svc % 4) * 70);
     return () => clearTimeout(t);
   }, [phase, svc]);
 
   useEffect(() => {
     if (phase !== "splash") return undefined;
-    const t = setTimeout(onDone, 1600);
+    const t = setTimeout(onDone, 1500);
     return () => clearTimeout(t);
   }, [phase, onDone]);
 
   const stamp = (i: number) => `[    ${(0.4821 + i * 0.1734).toFixed(6)}]`;
+  const progress = Math.round(
+    ((kernel + svc) / (KERNEL.length + SERVICES.length)) * 100,
+  );
 
   return (
     <div
-      className="scanlines crt-flicker relative flex h-screen w-full flex-col overflow-hidden px-4 py-5 font-mono text-[11.5px] sm:px-12 sm:text-[12.5px]"
+      role="status"
+      aria-live="polite"
+      aria-label="PandaOS is starting up"
+      className="scanlines crt-flicker relative flex h-screen w-full flex-col overflow-hidden px-3 py-4 font-mono text-[10.5px] leading-relaxed sm:px-10 sm:py-6 sm:text-[12px] lg:text-[13px]"
       style={{ backgroundColor: "var(--color-terminal)" }}
     >
+
       {phase === "grub" && (
         <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center">
           <p className="mb-2 text-center text-muted-foreground">GNU GRUB version 2.12</p>
@@ -126,28 +148,37 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
             <p className="px-2 py-0.5 text-muted-foreground">UEFI Firmware Settings</p>
           </div>
           <p className="mt-3 text-center text-[10.5px] text-muted-foreground">
-            The highlighted entry will be executed automatically in 1s.
+            The highlighted entry will be executed automatically in {Math.max(countdown, 0)}s.
           </p>
         </div>
       )}
 
       {(phase === "kernel" || phase === "services") && (
-        <ul className="flex-1 space-y-0.5">
-          {KERNEL.slice(0, kernel).map((line, i) => (
-            <li key={line} className="break-words text-muted-foreground">
-              <span className="text-shell-dim">{stamp(i)}</span> {line}
+        <div className="flex min-h-0 flex-1 flex-col">
+          <ul className="term-scroll min-h-0 flex-1 space-y-0.5 overflow-y-auto">
+            {KERNEL.slice(0, kernel).map((line, i) => (
+              <li key={line} className="break-words text-muted-foreground">
+                <span className="text-shell-dim">{stamp(i)}</span> {line}
+              </li>
+            ))}
+            {SERVICES.slice(0, svc).map((line) => (
+              <li key={line} className="break-words text-muted-foreground">
+                <span className="text-shell">[ OK ]</span> {line}
+              </li>
+            ))}
+            <li className="text-primary">
+              <span className="caret-blink">█</span>
             </li>
-          ))}
-          {SERVICES.slice(0, svc).map((line) => (
-            <li key={line} className="break-words text-muted-foreground">
-              <span className="text-shell">[ OK ]</span> {line}
-            </li>
-          ))}
-          <li className="text-primary">
-            <span className="caret-blink">█</span>
-          </li>
-        </ul>
+          </ul>
+          <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-border/50">
+            <div
+              className="h-full rounded-full bg-primary transition-[width] duration-200"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
       )}
+
 
       {phase === "splash" && (
         <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
@@ -178,10 +209,13 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
       <button
         type="button"
         onClick={onDone}
-        className="mt-4 min-h-11 w-fit self-start rounded-sm border border-border px-4 py-2 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+        title="Skip the boot sequence and go to the desktop"
+        aria-label="Skip boot and go to desktop"
+        className="mt-4 min-h-11 w-fit self-start rounded-md border border-border bg-background/40 px-4 py-2 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
       >
-        skip boot →
+        skip to desktop → <span className="hidden sm:inline text-shell-dim">(esc)</span>
       </button>
+
     </div>
   );
 }

@@ -19,7 +19,9 @@ import { CTF_BANNER } from "@/lib/ctf";
 import { BootScreen } from "./BootScreen";
 import { Hero } from "./Hero";
 import { TopBar } from "./TopBar";
+import { WallpaperPicker } from "./WallpaperPicker";
 import { Window } from "./Window";
+
 import type { AppId, WindowState } from "./types";
 import { AboutApp } from "./apps/AboutApp";
 import { AiApp } from "./apps/AiApp";
@@ -140,6 +142,8 @@ export function Desktop() {
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [focused, setFocused] = useState<AppId | null>(null);
   const [paper, setPaper] = useState(0);
+  const [picker, setPicker] = useState(false);
+
   const zRef = useRef(10);
   const openCount = useRef(0);
 
@@ -226,14 +230,17 @@ export function Desktop() {
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      <img
-        key={paper}
-        src={wallpapers[paper]}
-        alt=""
-        width={1920}
-        height={1088}
-        className="absolute inset-0 size-full animate-in object-cover duration-700 fade-in"
-      />
+      {wallpapers.map((src, i) => (
+        <img
+          key={src}
+          src={src}
+          alt=""
+          width={1920}
+          height={1088}
+          className="absolute inset-0 size-full object-cover transition-opacity duration-700 ease-out"
+          style={{ opacity: paper === i ? 1 : 0 }}
+        />
+      ))}
       <div className="absolute inset-0 bg-background/50" />
       <div
         className="absolute inset-0"
@@ -244,7 +251,8 @@ export function Desktop() {
       />
 
       <div className="relative flex h-full flex-col">
-        <TopBar onOpen={open} onWallpaper={() => setPaper((p) => (p + 1) % wallpapers.length)} />
+        <TopBar onOpen={open} onWallpaper={() => setPicker((v) => !v)} />
+
 
         <main className="relative min-h-0 flex-1">
           <h1 className="sr-only">
@@ -266,20 +274,23 @@ export function Desktop() {
                       type="button"
                       onDoubleClick={() => open(app.id)}
                       onClick={() => open(app.id)}
-                      className="group flex w-[5.75rem] flex-col items-center gap-2 rounded-xl p-1.5 focus-visible:outline-none sm:w-[6.25rem]"
+                      title={`Open ${app.label} (${app.hint})`}
+                      aria-label={`Open ${app.label}`}
+                      className="group relative flex w-[5.75rem] flex-col items-center gap-2 rounded-xl p-1.5 focus-visible:outline-none sm:w-[6.25rem]"
                     >
                       <span
                         className={cn(
-                          "icon-3d icon-sheen relative grid size-[4.25rem] place-items-center rounded-[1.35rem] border border-foreground/12 backdrop-blur-xl",
+                          "icon-3d icon-sheen icon-bezel relative grid size-[4.25rem] place-items-center rounded-[1.4rem] border border-foreground/12 backdrop-blur-xl",
                           "transition-all duration-300 ease-out will-change-transform",
                           "group-hover:-translate-y-2 group-hover:scale-[1.12] group-hover:rotate-[-2deg] group-active:scale-95",
                           "group-hover:border-primary/70 group-hover:glow-primary group-focus-visible:border-primary",
-                          "[&_svg]:size-8 [&_svg]:drop-shadow-[0_3px_5px_oklch(0_0_0/0.65)] [&_svg]:stroke-[1.85]",
+                          "[&_svg]:size-8 [&_svg]:drop-shadow-[0_3px_6px_oklch(0_0_0/0.7)] [&_svg]:stroke-[1.9]",
                           app.tone,
                         )}
                       >
                         {app.icon}
                       </span>
+
                       <span className="rounded-md bg-background/35 px-1.5 py-0.5 font-sans text-[11.5px] leading-tight font-medium text-foreground/95 backdrop-blur-sm transition-colors group-hover:text-primary">
                         {app.label}
                       </span>
@@ -332,7 +343,13 @@ export function Desktop() {
                     onClick={() =>
                       state.minimized ? focus(state.id) : update(state.id, { minimized: true })
                     }
-                    title={app.label}
+                    title={
+                      state.minimized ? `Restore ${app.label}` : `Minimize ${app.label}`
+                    }
+                    aria-label={
+                      state.minimized ? `Restore ${app.label} window` : `Minimize ${app.label} window`
+                    }
+                    aria-pressed={focused === state.id && !state.minimized}
                     className={cn(
                       "flex items-center gap-2 rounded-md border px-2.5 py-1.5 font-mono text-[11px] transition-colors [&_svg]:size-4",
                       focused === state.id && !state.minimized
@@ -348,17 +365,33 @@ export function Desktop() {
             })}
           </ul>
 
+          {picker && (
+            <WallpaperPicker
+              active={paper}
+              onSelect={(i) => setPaper(i)}
+              onRandomize={() => setPaper(randomWallpaperIndex())}
+              onClose={() => setPicker(false)}
+            />
+          )}
 
           <button
             type="button"
-            onClick={() => setPaper((p) => (p + 1) % wallpapers.length)}
-            title="Change wallpaper"
-            className="flex shrink-0 items-center gap-2 rounded-md border border-border/60 px-2.5 py-1.5 font-mono text-[11px] text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary [&_svg]:size-4"
+            onClick={() => setPicker((v) => !v)}
+            title="Choose or randomize the wallpaper"
+            aria-label="Choose or randomize the wallpaper"
+            aria-expanded={picker}
+            className={cn(
+              "flex shrink-0 items-center gap-2 rounded-md border px-2.5 py-1.5 font-mono text-[11px] transition-colors [&_svg]:size-4",
+              picker
+                ? "border-primary/70 bg-primary/15 text-primary"
+                : "border-border/60 text-muted-foreground hover:border-primary/60 hover:text-primary",
+            )}
           >
             <ImageIcon />
             <span className="hidden sm:inline">wallpaper</span>
           </button>
         </footer>
+
       </div>
     </div>
 

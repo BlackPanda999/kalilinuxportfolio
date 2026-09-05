@@ -120,7 +120,8 @@ export function Window({
         <div className="ml-auto flex shrink-0 items-center gap-1">
           <button
             type="button"
-            aria-label="Minimize window"
+            title="Minimize"
+            aria-label={`Minimize ${title}`}
             onClick={onMinimize}
             className="grid size-9 place-items-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground sm:size-7"
           >
@@ -129,7 +130,9 @@ export function Window({
           {!isMobile && (
             <button
               type="button"
-              aria-label="Maximize window"
+              title={state.maximized ? "Restore" : "Maximize"}
+              aria-label={`${state.maximized ? "Restore" : "Maximize"} ${title}`}
+              aria-pressed={state.maximized}
               onClick={onToggleMaximize}
               className="grid size-9 place-items-center rounded-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground sm:size-7"
             >
@@ -138,12 +141,14 @@ export function Window({
           )}
           <button
             type="button"
-            aria-label="Close window"
+            title="Close"
+            aria-label={`Close ${title}`}
             onClick={onClose}
             className="grid size-9 place-items-center rounded-sm text-muted-foreground transition-colors hover:bg-destructive hover:text-destructive-foreground sm:size-7"
           >
             <X className="size-4" />
           </button>
+
         </div>
       </header>
 
