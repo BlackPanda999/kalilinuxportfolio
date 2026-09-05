@@ -135,14 +135,20 @@ export function TopBar({
           </span>
         ))}
 
-        <time className="px-1 text-foreground/90">
+        <time className="px-1 text-foreground/90" title="System clock">
           {now
             ? now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })
             : "--:--"}
         </time>
-        <span className="grid size-6 place-items-center text-shell [&_svg]:size-3.5">
-          <Lock />
+        <span
+          className="grid size-6 place-items-center text-shell [&_svg]:size-3.5"
+          title="Session locked · secure boot"
+          aria-label="Session secured"
+          role="img"
+        >
+          <Lock aria-hidden="true" />
         </span>
+
       </div>
     </header>
   );
