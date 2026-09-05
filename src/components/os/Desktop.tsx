@@ -226,14 +226,17 @@ export function Desktop() {
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      <img
-        key={paper}
-        src={wallpapers[paper]}
-        alt=""
-        width={1920}
-        height={1088}
-        className="absolute inset-0 size-full animate-in object-cover duration-700 fade-in"
-      />
+      {wallpapers.map((src, i) => (
+        <img
+          key={src}
+          src={src}
+          alt=""
+          width={1920}
+          height={1088}
+          className="absolute inset-0 size-full object-cover transition-opacity duration-700 ease-out"
+          style={{ opacity: paper === i ? 1 : 0 }}
+        />
+      ))}
       <div className="absolute inset-0 bg-background/50" />
       <div
         className="absolute inset-0"
@@ -244,7 +247,8 @@ export function Desktop() {
       />
 
       <div className="relative flex h-full flex-col">
-        <TopBar onOpen={open} onWallpaper={() => setPaper((p) => (p + 1) % wallpapers.length)} />
+        <TopBar onOpen={open} onWallpaper={() => setPicker((v) => !v)} />
+
 
         <main className="relative min-h-0 flex-1">
           <h1 className="sr-only">
