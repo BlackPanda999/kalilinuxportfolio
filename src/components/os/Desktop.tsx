@@ -19,7 +19,9 @@ import { CTF_BANNER } from "@/lib/ctf";
 import { BootScreen } from "./BootScreen";
 import { Hero } from "./Hero";
 import { TopBar } from "./TopBar";
+import { WallpaperPicker } from "./WallpaperPicker";
 import { Window } from "./Window";
+
 import type { AppId, WindowState } from "./types";
 import { AboutApp } from "./apps/AboutApp";
 import { AiApp } from "./apps/AiApp";
