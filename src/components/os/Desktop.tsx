@@ -140,6 +140,8 @@ export function Desktop() {
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [focused, setFocused] = useState<AppId | null>(null);
   const [paper, setPaper] = useState(0);
+  const [picker, setPicker] = useState(false);
+
   const zRef = useRef(10);
   const openCount = useRef(0);
 
