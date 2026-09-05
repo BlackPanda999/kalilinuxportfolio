@@ -53,14 +53,15 @@ export function TopBar({
       <span className="h-4 w-px bg-border/70" />
 
       {/* quick-launch dock */}
-      <div className="flex items-center gap-0.5">
+      <div className="flex items-center gap-0.5" role="group" aria-label="Quick launch dock">
         {QUICK.map((item) => (
           <button
             key={item.id}
             type="button"
-            title={item.label}
+            title={`Open ${item.label}`}
+            aria-label={`Open ${item.label}`}
             onClick={() => onOpen?.(item.id)}
-            className="grid size-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-primary [&_svg]:size-4"
+            className="grid size-7 place-items-center rounded-md text-muted-foreground transition-all hover:-translate-y-px hover:bg-secondary/70 hover:text-primary [&_svg]:size-4"
           >
             <item.icon />
           </button>
@@ -70,12 +71,18 @@ export function TopBar({
       <span className="h-4 w-px bg-border/70" />
 
       {/* workspaces */}
-      <div className="flex items-center gap-1 rounded-md bg-secondary/40 px-1 py-0.5">
+      <div
+        className="flex items-center gap-1 rounded-md bg-secondary/40 px-1 py-0.5"
+        role="group"
+        aria-label="Workspaces"
+      >
         {[1, 2, 3, 4].map((n) => (
           <button
             key={n}
             type="button"
-            title={`Workspace ${n}`}
+            title={`Switch to workspace ${n}`}
+            aria-label={`Switch to workspace ${n}`}
+            aria-pressed={workspace === n}
             onClick={() => setWorkspace(n)}
             className={cn(
               "size-2 rounded-full transition-all",
@@ -84,7 +91,7 @@ export function TopBar({
                 : "bg-muted-foreground/50 hover:bg-muted-foreground",
             )}
           >
-            <span className="sr-only">{n}</span>
+            <span className="sr-only">Workspace {n}</span>
           </button>
         ))}
       </div>
@@ -94,27 +101,40 @@ export function TopBar({
       </span>
 
       {/* right status tray */}
-      <div className="ml-auto flex items-center gap-1.5">
-        <span className="hidden items-center gap-1 text-shell md:flex">
-          <Cpu className="size-3.5" />
+      <div className="ml-auto flex items-center gap-1.5" role="group" aria-label="System tray">
+        <span className="hidden items-center gap-1 text-shell md:flex" title="CPU load: 7%">
+          <Cpu className="size-3.5" aria-hidden="true" />
           <span className="text-[10px]">7%</span>
+          <span className="sr-only">CPU load 7 percent</span>
         </span>
         <button
           type="button"
           onClick={onWallpaper}
-          title="Change wallpaper"
+          title="Wallpaper settings"
+          aria-label="Open wallpaper settings"
           className="grid size-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-primary [&_svg]:size-3.5"
         >
           <ImageIcon />
         </button>
-        {[Wifi, Volume2, Bell, BatteryFull].map((Icon, i) => (
+        {(
+          [
+            [Wifi, "Wi-Fi connected"],
+            [Volume2, "Volume: 60%"],
+            [Bell, "Notifications: none"],
+            [BatteryFull, "Battery: full"],
+          ] as const
+        ).map(([Icon, label]) => (
           <span
-            key={i}
+            key={label}
+            title={label}
+            aria-label={label}
+            role="img"
             className="grid size-6 place-items-center text-muted-foreground [&_svg]:size-3.5"
           >
-            <Icon />
+            <Icon aria-hidden="true" />
           </span>
         ))}
+
         <time className="px-1 text-foreground/90">
           {now
             ? now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })
