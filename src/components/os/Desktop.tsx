@@ -338,7 +338,13 @@ export function Desktop() {
                     onClick={() =>
                       state.minimized ? focus(state.id) : update(state.id, { minimized: true })
                     }
-                    title={app.label}
+                    title={
+                      state.minimized ? `Restore ${app.label}` : `Minimize ${app.label}`
+                    }
+                    aria-label={
+                      state.minimized ? `Restore ${app.label} window` : `Minimize ${app.label} window`
+                    }
+                    aria-pressed={focused === state.id && !state.minimized}
                     className={cn(
                       "flex items-center gap-2 rounded-md border px-2.5 py-1.5 font-mono text-[11px] transition-colors [&_svg]:size-4",
                       focused === state.id && !state.minimized
@@ -354,17 +360,33 @@ export function Desktop() {
             })}
           </ul>
 
+          {picker && (
+            <WallpaperPicker
+              active={paper}
+              onSelect={(i) => setPaper(i)}
+              onRandomize={() => setPaper(randomWallpaperIndex())}
+              onClose={() => setPicker(false)}
+            />
+          )}
 
           <button
             type="button"
-            onClick={() => setPaper((p) => (p + 1) % wallpapers.length)}
-            title="Change wallpaper"
-            className="flex shrink-0 items-center gap-2 rounded-md border border-border/60 px-2.5 py-1.5 font-mono text-[11px] text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary [&_svg]:size-4"
+            onClick={() => setPicker((v) => !v)}
+            title="Choose or randomize the wallpaper"
+            aria-label="Choose or randomize the wallpaper"
+            aria-expanded={picker}
+            className={cn(
+              "flex shrink-0 items-center gap-2 rounded-md border px-2.5 py-1.5 font-mono text-[11px] transition-colors [&_svg]:size-4",
+              picker
+                ? "border-primary/70 bg-primary/15 text-primary"
+                : "border-border/60 text-muted-foreground hover:border-primary/60 hover:text-primary",
+            )}
           >
             <ImageIcon />
             <span className="hidden sm:inline">wallpaper</span>
           </button>
         </footer>
+
       </div>
     </div>
 
