@@ -1,4 +1,4 @@
-import { Linkedin, Globe, Mail, MapPin, Phone, ShieldCheck, Terminal } from "lucide-react";
+import { Linkedin, Globe, ShieldCheck, Terminal } from "lucide-react";
 
 import { profile } from "@/data/profile";
 import { Card, Chip, CmdLine, Pane, PathBar, SectionTitle, Stat } from "./ui";

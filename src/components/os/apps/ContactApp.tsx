@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle2, Globe, Linkedin, Loader2, Mail, MapPin, Phone, Send } from "lucide-react";
+import { AlertCircle, CheckCircle2, Globe, Linkedin, Loader2, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { profile } from "@/data/profile";
@@ -8,8 +8,6 @@ import { cn } from "@/lib/utils";
 import { Chip, Pane, PageHeader, PathBar, SectionTitle } from "./ui";
 
 const rows = [
-  { icon: Mail, label: "email", value: profile.email, href: `mailto:${profile.email}` },
-  { icon: Phone, label: "phone", value: profile.phone, href: `tel:${profile.phone}` },
   {
     icon: Linkedin,
     label: "linkedin",
@@ -17,7 +15,6 @@ const rows = [
     href: profile.linkedin,
   },
   { icon: Globe, label: "website", value: "blackpanda999.base44.app", href: profile.website },
-  { icon: MapPin, label: "location", value: profile.location, href: undefined },
 ];
 
 type Errors = Partial<Record<"name" | "email" | "subject" | "message", string>>;
@@ -252,7 +249,7 @@ export function ContactApp() {
                 <span className="text-primary">
                   {profile.handle}@{profile.host}
                 </span>
-                :~$ mail -s &quot;hello&quot; {profile.email}
+                :~$ ./send_message.sh --via contact-form
               </p>
               <p className="mt-1 text-muted-foreground">// replies usually within 24 hours</p>
             </div>
