@@ -6,9 +6,6 @@ export const profile = {
   handle: "blackpanda999",
   host: "kali",
   titles: ["Cyber Security Specialist", "IT Specialist", "AI Integration Consultant"],
-  location: "Riyadh, Saudi Arabia",
-  email: "usamakhan424455@gmail.com",
-  phone: "0557259035",
   linkedin: "https://www.linkedin.com/in/osamakhan44",
   website: "https://blackpanda999.base44.app/",
   availability: "Iqama Transferable · Valid Saudi Driving License · Available to join immediately",
@@ -337,8 +334,7 @@ export function buildKnowledgeBase(): string {
   const lines: string[] = [];
   lines.push(`NAME: ${profile.name} (alias ${profile.handle})`);
   lines.push(`TITLES: ${profile.titles.join(", ")}`);
-  lines.push(`LOCATION: ${profile.location}`);
-  lines.push(`EMAIL: ${profile.email} | PHONE: ${profile.phone}`);
+  lines.push(`CONTACT: use the Contact window form or LinkedIn. Personal email/phone/location are private.`);
   lines.push(`LINKEDIN: ${profile.linkedin} | WEBSITE: ${profile.website}`);
   lines.push(`AVAILABILITY: ${profile.availability}`);
   lines.push(`SUMMARY: ${profile.summary}`);

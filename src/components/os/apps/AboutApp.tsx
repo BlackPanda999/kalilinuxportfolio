@@ -1,4 +1,4 @@
-import { Linkedin, Globe, Mail, MapPin, Phone, ShieldCheck, Terminal } from "lucide-react";
+import { Linkedin, Globe, ShieldCheck, Terminal } from "lucide-react";
 
 import { profile } from "@/data/profile";
 import { Card, Chip, CmdLine, Pane, PathBar, SectionTitle, Stat } from "./ui";
@@ -28,17 +28,9 @@ export function AboutApp() {
               <p className="mt-2 text-sm text-primary">{profile.titles.join(" · ")}</p>
               <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
                 <span className="inline-flex items-center gap-1.5">
-                  <MapPin className="size-3.5" />
-                  {profile.location}
+                  <ShieldCheck className="size-3.5" />
+                  Available for cyber security, IT &amp; AI roles
                 </span>
-                <a className="inline-flex items-center gap-1.5 hover:text-primary" href={`mailto:${profile.email}`}>
-                  <Mail className="size-3.5" />
-                  {profile.email}
-                </a>
-                <a className="inline-flex items-center gap-1.5 hover:text-primary" href={`tel:${profile.phone}`}>
-                  <Phone className="size-3.5" />
-                  {profile.phone}
-                </a>
                 <a
                   className="inline-flex items-center gap-1.5 hover:text-primary"
                   href={profile.linkedin}

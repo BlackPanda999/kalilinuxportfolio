@@ -6,6 +6,7 @@ export type AppId =
   | "skills"
   | "cv"
   | "contact"
+  | "cyber"
   | "terminal"
   | "ai";
 
