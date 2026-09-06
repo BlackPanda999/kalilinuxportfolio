@@ -92,7 +92,7 @@ export function AiApp() {
 
         {error && (
           <p className="text-destructive">
-            panda-ai: request failed. Please try again in a moment, or email {profile.email}.
+            panda-ai: request failed. Please try again in a moment, or use the Contact window.
           </p>
         )}
 

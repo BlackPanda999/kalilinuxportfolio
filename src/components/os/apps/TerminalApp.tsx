@@ -30,11 +30,10 @@ const NEOFETCH = [
   `Host       : ${profile.name}`,
   `Role       : ${profile.titles.join(" / ")}`,
   `Uptime     : 5+ years in IT & security`,
-  `Location   : ${profile.location}`,
   `Shell      : bash / python3`,
   `Certs      : ${certifications.reduce((n, g) => n + g.items.length, 0)} credentials`,
   `Projects   : ${projects.length} documented`,
-  `Contact    : ${profile.email}`,
+  `Contact    : contact window / linkedin`,
 ].join("\n");
 
 export function TerminalApp({ onOpen }: { onOpen: (id: AppId) => void }) {
@@ -102,7 +101,10 @@ export function TerminalApp({ onOpen }: { onOpen: (id: AppId) => void }) {
             text: "cat: .flag: binary file — try `hexdump .flag`",
           });
         } else if (arg === "contact.conf") {
-          next.push({ kind: "out", text: `email = ${profile.email}\nphone = ${profile.phone}` });
+          next.push({
+            kind: "out",
+            text: "channels = contact-form, linkedin\nemail = [redacted]\nphone = [redacted]",
+          });
         } else if (arg === "about_me.txt") {
           next.push({ kind: "out", text: profile.summary });
         } else {
@@ -172,7 +174,7 @@ export function TerminalApp({ onOpen }: { onOpen: (id: AppId) => void }) {
       case "contact":
         next.push({
           kind: "out",
-          text: `email    ${profile.email}\nphone    ${profile.phone}\nlinkedin ${profile.linkedin}\nwebsite  ${profile.website}\nlocation ${profile.location}`,
+          text: `form     open the Contact window\nlinkedin ${profile.linkedin}\nwebsite  ${profile.website}`,
         });
         break;
       case "open": {
