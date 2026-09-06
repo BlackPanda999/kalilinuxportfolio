@@ -7,6 +7,7 @@ import {
   ImageIcon,
   Mail,
   ScrollText,
+  ShieldCheck,
   Terminal as TerminalIcon,
   UserRound,
   Wrench,
@@ -28,6 +29,7 @@ import { AiApp } from "./apps/AiApp";
 import { CertificationsApp } from "./apps/CertificationsApp";
 import { ContactApp } from "./apps/ContactApp";
 import { CvApp } from "./apps/CvApp";
+import { CyberApp } from "./apps/CyberApp";
 import { ExperienceApp } from "./apps/ExperienceApp";
 import { ProjectsApp } from "./apps/ProjectsApp";
 import { SkillsApp } from "./apps/SkillsApp";
@@ -126,6 +128,16 @@ const APPS: AppDef[] = [
     h: 560,
   },
   {
+    id: "cyber",
+    label: "Cyber Security",
+    title: "roadmap.md — Cyber Security Academy",
+    hint: "zero → hero",
+    icon: <ShieldCheck />,
+    tone: "text-shell",
+    w: 900,
+    h: 620,
+  },
+  {
     id: "terminal",
     label: "Terminal",
     title: "blackpanda999@kali: ~",
@@ -216,6 +228,7 @@ export function Desktop() {
       experience: <ExperienceApp />,
       skills: <SkillsApp />,
       cv: <CvApp />,
+      cyber: <CyberApp />,
       contact: <ContactApp />,
       ai: <AiApp />,
       terminal: <TerminalApp onOpen={open} />,
@@ -280,7 +293,7 @@ export function Desktop() {
                     >
                       <span
                         className={cn(
-                          "icon-3d icon-sheen icon-bezel relative grid size-[4.25rem] place-items-center rounded-[1.4rem] border border-foreground/12 backdrop-blur-xl",
+                          "icon-3d icon-sheen icon-bezel relative grid size-[4.25rem] place-items-center rounded-[1.4rem] border-2 border-foreground/70 ring-1 ring-foreground/25 ring-offset-1 ring-offset-background/30 backdrop-blur-xl",
                           "transition-all duration-300 ease-out will-change-transform",
                           "group-hover:-translate-y-2 group-hover:scale-[1.12] group-hover:rotate-[-2deg] group-active:scale-95",
                           "group-hover:border-primary/70 group-hover:glow-primary group-focus-visible:border-primary",
