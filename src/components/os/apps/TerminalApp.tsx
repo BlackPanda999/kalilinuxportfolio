@@ -185,6 +185,7 @@ export function TerminalApp({ onOpen }: { onOpen: (id: AppId) => void }) {
           "experience",
           "skills",
           "cv",
+          "cyber",
           "contact",
           "ai",
         ];
