@@ -225,20 +225,14 @@ export function ContactApp() {
                     <span className="block font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
                       {row.label}
                     </span>
-                    {row.href ? (
-                      <a
-                        href={row.href}
-                        target={row.href.startsWith("http") ? "_blank" : undefined}
-                        rel="noreferrer"
-                        className="block truncate text-[13.5px] text-foreground/90 hover:text-primary"
-                      >
-                        {row.value}
-                      </a>
-                    ) : (
-                      <span className="block truncate text-[13.5px] text-foreground/90">
-                        {row.value}
-                      </span>
-                    )}
+                    <a
+                      href={row.href}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="block truncate text-[13.5px] text-foreground/90 hover:text-primary"
+                    >
+                      {row.value}
+                    </a>
                   </span>
                 </li>
               ))}
