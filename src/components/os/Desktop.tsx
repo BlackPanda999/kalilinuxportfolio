@@ -4,7 +4,6 @@ import {
   BadgeCheck,
   FileText,
   FolderClosed,
-  ImageIcon,
   Mail,
   ScrollText,
   ShieldCheck,
@@ -20,7 +19,6 @@ import { CTF_BANNER } from "@/lib/ctf";
 import { BootScreen } from "./BootScreen";
 import { Hero } from "./Hero";
 import { TopBar } from "./TopBar";
-import { WallpaperPicker } from "./WallpaperPicker";
 import { Window } from "./Window";
 
 import type { AppId, WindowState } from "./types";
@@ -154,7 +152,6 @@ export function Desktop() {
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [focused, setFocused] = useState<AppId | null>(null);
   const [paper, setPaper] = useState(0);
-  const [picker, setPicker] = useState(false);
 
   const zRef = useRef(10);
   const openCount = useRef(0);
@@ -243,17 +240,14 @@ export function Desktop() {
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {wallpapers.map((src, i) => (
-        <img
-          key={src}
-          src={src}
-          alt=""
-          width={1920}
-          height={1088}
-          className="absolute inset-0 size-full object-cover transition-opacity duration-700 ease-out"
-          style={{ opacity: paper === i ? 1 : 0 }}
-        />
-      ))}
+      <img
+        src={wallpapers[paper]}
+        alt=""
+        width={1920}
+        height={1088}
+        fetchPriority="high"
+        className="absolute inset-0 size-full object-cover"
+      />
       <div className="absolute inset-0 bg-background/50" />
       <div
         className="absolute inset-0"
@@ -264,7 +258,7 @@ export function Desktop() {
       />
 
       <div className="relative flex h-full flex-col">
-        <TopBar onOpen={open} onWallpaper={() => setPicker((v) => !v)} />
+        <TopBar onOpen={open} />
 
 
         <main className="relative min-h-0 flex-1">
@@ -378,31 +372,6 @@ export function Desktop() {
             })}
           </ul>
 
-          {picker && (
-            <WallpaperPicker
-              active={paper}
-              onSelect={(i) => setPaper(i)}
-              onRandomize={() => setPaper(randomWallpaperIndex())}
-              onClose={() => setPicker(false)}
-            />
-          )}
-
-          <button
-            type="button"
-            onClick={() => setPicker((v) => !v)}
-            title="Choose or randomize the wallpaper"
-            aria-label="Choose or randomize the wallpaper"
-            aria-expanded={picker}
-            className={cn(
-              "flex shrink-0 items-center gap-2 rounded-md border px-2.5 py-1.5 font-mono text-[11px] transition-colors [&_svg]:size-4",
-              picker
-                ? "border-primary/70 bg-primary/15 text-primary"
-                : "border-border/60 text-muted-foreground hover:border-primary/60 hover:text-primary",
-            )}
-          >
-            <ImageIcon />
-            <span className="hidden sm:inline">wallpaper</span>
-          </button>
         </footer>
 
       </div>

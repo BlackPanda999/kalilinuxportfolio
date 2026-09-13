@@ -5,7 +5,6 @@ import {
   Bot,
   Cpu,
   FolderClosed,
-  ImageIcon,
   Lock,
   ShieldCheck,
   Terminal as TerminalIcon,
@@ -26,13 +25,14 @@ const QUICK: { id: AppId; label: string; icon: typeof Bot }[] = [
 
 export function TopBar({
   onOpen,
-  onWallpaper,
 }: {
   onOpen?: (id: AppId) => void;
-  onWallpaper?: () => void;
 }) {
   const [now, setNow] = useState<Date | null>(null);
   const [workspace, setWorkspace] = useState(1);
+  const [wifi, setWifi] = useState(true);
+  const [sound, setSound] = useState(true);
+  const [notifications, setNotifications] = useState(true);
 
   useEffect(() => {
     setNow(new Date());
@@ -46,7 +46,7 @@ export function TopBar({
       <span className="flex items-center gap-1.5 rounded-md bg-primary/12 px-2 py-1 text-primary">
         <ShieldCheck className="size-4" />
         <span className="hidden text-[10.5px] font-semibold tracking-[0.16em] sm:inline">
-          PandaOS 26.04
+          Blackpanda Team
         </span>
       </span>
 
@@ -102,38 +102,59 @@ export function TopBar({
 
       {/* right status tray */}
       <div className="ml-auto flex items-center gap-1.5" role="group" aria-label="System tray">
-        <span className="hidden items-center gap-1 text-shell md:flex" title="CPU load: 7%">
+        <span className="hidden items-center gap-1 text-shell md:flex" title="CPU active · load 7%">
           <Cpu className="size-3.5" aria-hidden="true" />
           <span className="text-[10px]">7%</span>
           <span className="sr-only">CPU load 7 percent</span>
         </span>
         <button
           type="button"
-          onClick={onWallpaper}
-          title="Wallpaper settings"
-          aria-label="Open wallpaper settings"
-          className="grid size-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-secondary/70 hover:text-primary [&_svg]:size-3.5"
+          onClick={() => setWifi((value) => !value)}
+          title={wifi ? "Wi-Fi connected · click to disconnect" : "Wi-Fi offline · click to connect"}
+          aria-label={wifi ? "Disconnect Wi-Fi" : "Connect Wi-Fi"}
+          aria-pressed={wifi}
+          className={cn(
+            "status-control",
+            wifi ? "text-shell" : "text-muted-foreground",
+          )}
         >
-          <ImageIcon />
+          <Wifi aria-hidden="true" />
         </button>
-        {(
-          [
-            [Wifi, "Wi-Fi connected"],
-            [Volume2, "Volume: 60%"],
-            [Bell, "Notifications: none"],
-            [BatteryFull, "Battery: full"],
-          ] as const
-        ).map(([Icon, label]) => (
-          <span
-            key={label}
-            title={label}
-            aria-label={label}
-            role="img"
-            className="grid size-6 place-items-center text-muted-foreground [&_svg]:size-3.5"
-          >
-            <Icon aria-hidden="true" />
-          </span>
-        ))}
+        <button
+          type="button"
+          onClick={() => setSound((value) => !value)}
+          title={sound ? "Sound on · volume 60% · click to mute" : "Sound muted · click to unmute"}
+          aria-label={sound ? "Mute sound" : "Unmute sound"}
+          aria-pressed={sound}
+          className={cn(
+            "status-control",
+            sound ? "text-shell" : "text-muted-foreground opacity-60",
+          )}
+        >
+          <Volume2 aria-hidden="true" />
+          {!sound && <span className="absolute h-px w-4 rotate-45 bg-current" />}
+        </button>
+        <button
+          type="button"
+          onClick={() => setNotifications((value) => !value)}
+          title={notifications ? "Notifications enabled · click to silence" : "Notifications silenced · click to enable"}
+          aria-label={notifications ? "Silence notifications" : "Enable notifications"}
+          aria-pressed={notifications}
+          className={cn(
+            "status-control",
+            notifications ? "text-shell" : "text-muted-foreground opacity-60",
+          )}
+        >
+          <Bell aria-hidden="true" />
+        </button>
+        <span
+          title="Battery charged · 100%"
+          aria-label="Battery charged, 100 percent"
+          role="img"
+          className="status-control text-shell"
+        >
+          <BatteryFull aria-hidden="true" />
+        </span>
 
         <time className="px-1 text-foreground/90" title="System clock">
           {now
@@ -141,7 +162,7 @@ export function TopBar({
             : "--:--"}
         </time>
         <span
-          className="grid size-6 place-items-center text-shell [&_svg]:size-3.5"
+          className="status-control text-shell"
           title="Session locked · secure boot"
           aria-label="Session secured"
           role="img"

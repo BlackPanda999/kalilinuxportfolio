@@ -123,6 +123,24 @@
   backdrop-filter: blur(14px) saturate(140%);
 }
 
+@utility status-control {
+  position: relative;
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border-radius: 0.375rem;
+  transition: color 160ms ease, background-color 160ms ease, filter 160ms ease;
+  & svg {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+  &:hover {
+    background-color: color-mix(in oklab, var(--color-secondary) 72%, transparent);
+    filter: drop-shadow(0 0 5px color-mix(in oklab, var(--color-shell) 65%, transparent));
+  }
+}
+
 @utility scanlines {
   position: relative;
   &::after {
