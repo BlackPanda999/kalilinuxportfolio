@@ -1,0 +1,5 @@
+- [x] Remove wallpaper chooser; retain refresh randomization
+- [x] Upgrade Linux top panel status controls and branding
+- [x] Build safe Linux terminal practice lab and CTF
+- [ ] Upgrade cybersecurity and Linux AI assistant
+- [ ] Validate desktop, mobile, terminal, and live AI
