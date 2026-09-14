@@ -270,6 +270,49 @@
   color: color-mix(in oklab, var(--color-foreground) 88%, transparent);
 }
 
+@utility ai-markdown {
+  & p + p,
+  & ul,
+  & ol,
+  & pre,
+  & h1,
+  & h2,
+  & h3 {
+    margin-top: 0.7rem;
+  }
+  & h1,
+  & h2,
+  & h3 {
+    color: var(--color-shell);
+    font-weight: 700;
+  }
+  & ul,
+  & ol {
+    padding-left: 1.25rem;
+  }
+  & ul { list-style: disc; }
+  & ol { list-style: decimal; }
+  & code {
+    border-radius: 0.2rem;
+    background-color: color-mix(in oklab, var(--color-secondary) 72%, transparent);
+    padding: 0.1rem 0.3rem;
+    color: var(--color-shell);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+  & pre {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 0.35rem;
+    background-color: color-mix(in oklab, var(--color-background) 78%, transparent);
+    padding: 0.75rem;
+  }
+  & pre code {
+    background: transparent;
+    padding: 0;
+  }
+}
+
 @utility term-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border) transparent;

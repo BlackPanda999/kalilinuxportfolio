@@ -2,14 +2,15 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { CornerDownLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 import { profile } from "@/data/profile";
 
 const SUGGESTIONS = [
+  "Teach me 5 essential Linux commands",
+  "Create a safe beginner cybersecurity lab",
+  "Explain Nmap for an authorised home lab",
   "What are Osama's strongest security skills?",
-  "Summarise his cloud security experience",
-  "Which pen-testing tools has he used?",
-  "Is he a good fit for a SOC analyst role?",
 ];
 
 export function AiApp() {
@@ -39,9 +40,9 @@ export function AiApp() {
     >
       <div className="term-scroll min-h-0 flex-1 space-y-4 overflow-auto p-4">
         <div className="text-foreground/70">
-          <p className="text-shell">panda-ai v1.0 — knowledge base: {profile.name}</p>
+          <p className="text-shell">panda-ai v2.6 — Blackpanda learning assistant</p>
           <p className="mt-1">
-            Ask anything about his experience, projects, certifications or availability.
+            Ask about Linux commands, cyber security, ethical labs, career paths, or {profile.name}'s portfolio.
           </p>
         </div>
 
@@ -65,6 +66,9 @@ export function AiApp() {
           const text = message.parts
             .map((part) => (part.type === "text" ? part.text : ""))
             .join("");
+          const reasoning = message.parts
+            .map((part) => (part.type === "reasoning" ? part.text : ""))
+            .join("");
           if (message.role === "user") {
             return (
               <p key={message.id} className="break-words">
@@ -75,24 +79,29 @@ export function AiApp() {
             );
           }
           return (
-            <pre
-              key={message.id}
-              className="border-l-2 border-primary/50 pl-3 whitespace-pre-wrap break-words text-foreground/85"
-            >
-              {text}
-            </pre>
+            <div key={message.id} className="space-y-2 border-l-2 border-primary/50 pl-3 text-foreground/85">
+              {reasoning && (
+                <details className="rounded border border-border/60 bg-background/25 px-2.5 py-2 text-[11px] text-muted-foreground">
+                  <summary className="cursor-pointer text-shell">analysis complete</summary>
+                  <p className="mt-2 whitespace-pre-wrap">{reasoning}</p>
+                </details>
+              )}
+              <div className="ai-markdown break-words font-sans text-[13px] leading-relaxed">
+                <ReactMarkdown>{text}</ReactMarkdown>
+              </div>
+            </div>
           );
         })}
 
         {status === "submitted" && (
           <p className="text-muted-foreground">
-            panda-ai is thinking<span className="caret-blink">_</span>
+            panda-ai is analysing safely<span className="caret-blink">_</span>
           </p>
         )}
 
         {error && (
           <p className="text-destructive">
-            panda-ai: request failed. Please try again in a moment, or use the Contact window.
+            panda-ai: {error.message || "request failed"}. Your question was not sent again automatically.
           </p>
         )}
 
@@ -110,7 +119,7 @@ export function AiApp() {
         <input
           value={input}
           onChange={(event) => setInput(event.target.value)}
-          placeholder={busy ? "waiting for response..." : "ask about Osama..."}
+          placeholder={busy ? "analysing..." : "ask a Linux or security question..."}
           disabled={busy}
           aria-label="Ask the AI assistant"
           spellCheck={false}
