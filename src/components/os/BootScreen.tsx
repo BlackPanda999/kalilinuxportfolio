@@ -4,7 +4,7 @@ import { profile } from "@/data/profile";
 
 /** kernel-style log lines with dmesg timestamps */
 const KERNEL = [
-  "Linux version 6.12.0-pandaos-amd64 (gcc 14.2.0) #1 SMP PREEMPT_DYNAMIC",
+  "Linux version 6.12.0-blackpanda-amd64 (gcc 14.2.0) #1 SMP PREEMPT_DYNAMIC",
   "Command line: BOOT_IMAGE=/vmlinuz root=/dev/portfolio ro quiet splash",
   "smpboot: CPU0: AMD Ryzen 9 (family 0x19) — 16 cores online",
   "Memory: 32768MB available / secure boot: enabled / TPM 2.0: ok",
@@ -17,8 +17,8 @@ const SERVICES = [
   "Started Load Kernel Modules (pentest_toolkit: nmap, burp, metasploit).",
   "Started Network Manager — WPA3 · MFA enforced · VPN tunnel up.",
   "Started Elastic SIEM agent — telemetry streaming.",
-  "Started panda-ai assistant daemon.",
-  "Started Display Manager (pandadm).",
+  "Started blackpanda-ai assistant daemon.",
+  "Started Display Manager (blackpandadm).",
   "Reached target Graphical Interface.",
 ];
 
@@ -129,7 +129,7 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
     <div
       role="status"
       aria-live="polite"
-      aria-label="PandaOS is starting up"
+      aria-label="Blackpanda Linux is starting up"
       className="scanlines crt-flicker relative flex h-screen w-full flex-col overflow-hidden px-3 py-4 font-mono text-[10.5px] leading-relaxed sm:px-10 sm:py-6 sm:text-[12px] lg:text-[13px]"
       style={{ backgroundColor: "var(--color-terminal)" }}
     >
@@ -139,10 +139,10 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
           <p className="mb-2 text-center text-muted-foreground">GNU GRUB version 2.12</p>
           <div className="border border-border/80 p-3">
             <p className="bg-primary/85 px-2 py-0.5 text-primary-foreground">
-              PandaOS GNU/Linux 26.04 (kali-rolling)
+              Blackpanda Linux 2026.09 (kali-rolling)
             </p>
             <p className="px-2 py-0.5 text-muted-foreground">
-              Advanced options for PandaOS GNU/Linux
+              Advanced options for Blackpanda Linux
             </p>
             <p className="px-2 py-0.5 text-muted-foreground">Memory test (memtest86+)</p>
             <p className="px-2 py-0.5 text-muted-foreground">UEFI Firmware Settings</p>
@@ -185,10 +185,10 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
           <PandaLogo className="boot-pulse size-24 sm:size-32" />
           <div>
             <p className="font-sans text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
-              Panda<span className="text-primary">OS</span>
+              Blackpanda <span className="text-primary">Team</span>
             </p>
             <p className="mt-1 text-[11px] tracking-[0.34em] text-shell uppercase">
-              26.04 · secure edition
+              Linux 2026.09 · secure lab edition
             </p>
           </div>
           <div className="flex items-center gap-2">
