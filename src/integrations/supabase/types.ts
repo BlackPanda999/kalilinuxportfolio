@@ -47,6 +47,48 @@ export type Database = {
         }
         Relationships: []
       }
+      site_incidents: {
+        Row: {
+          auto_action: string | null
+          created_at: string
+          diagnosis: string | null
+          id: string
+          kind: string
+          message: string
+          path: string | null
+          severity: string
+          stack: string | null
+          status: string
+          user_agent: string | null
+        }
+        Insert: {
+          auto_action?: string | null
+          created_at?: string
+          diagnosis?: string | null
+          id?: string
+          kind?: string
+          message: string
+          path?: string | null
+          severity?: string
+          stack?: string | null
+          status?: string
+          user_agent?: string | null
+        }
+        Update: {
+          auto_action?: string | null
+          created_at?: string
+          diagnosis?: string | null
+          id?: string
+          kind?: string
+          message?: string
+          path?: string | null
+          severity?: string
+          stack?: string | null
+          status?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
