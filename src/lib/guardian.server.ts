@@ -85,7 +85,7 @@ async function askDoctor(report: GuardianReport): Promise<GuardianVerdict> {
   }
 }
 
-export async function healIncident(report: GuardianReport): Promise<GuardianVerdict & { id?: string }> {
+export async function healIncident(report: GuardianReport): Promise<GuardianVerdict & { id?: string | undefined }> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
   // de-duplicate: the same message within 10 minutes reuses the stored verdict
