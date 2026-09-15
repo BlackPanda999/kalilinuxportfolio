@@ -157,7 +157,9 @@ export function Desktop() {
   const openCount = useRef(0);
 
   // pick a random wallpaper per page load (client-side to keep SSR stable)
-  useEffect(() => setPaper(randomWallpaperIndex()), []);
+  useEffect(() => {
+    setPaper(randomWallpaperIndex());
+  }, []);
 
 
   // friendly easter-egg breadcrumb for anyone who opens devtools
