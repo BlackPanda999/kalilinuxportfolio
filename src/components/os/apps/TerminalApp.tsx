@@ -146,7 +146,9 @@ export function TerminalApp({ onOpen }: { onOpen: (id: AppId) => void }) {
   const [cwd, setCwd] = useState("/home/blackpanda999");
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => endRef.current?.scrollIntoView({ block: "end" }), [lines]);
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ block: "end" });
+  }, [lines]);
 
   function execute(command: string, workingDirectory: string): { output: Line[]; cwd: string } {
     const tokens = command.trim().split(/\s+/);
