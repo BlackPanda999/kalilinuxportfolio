@@ -7,6 +7,7 @@ import {
   Mail,
   ScrollText,
   ShieldCheck,
+  HeartPulse,
   Terminal as TerminalIcon,
   UserRound,
   Wrench,
@@ -32,6 +33,8 @@ import { ExperienceApp } from "./apps/ExperienceApp";
 import { ProjectsApp } from "./apps/ProjectsApp";
 import { SkillsApp } from "./apps/SkillsApp";
 import { TerminalApp } from "./apps/TerminalApp";
+import { GuardianApp } from "./apps/GuardianApp";
+import { Guardian } from "./Guardian";
 
 type AppDef = {
   id: AppId;
@@ -145,9 +148,27 @@ const APPS: AppDef[] = [
     w: 740,
     h: 460,
   },
+  {
+    id: "guardian",
+    label: "Panda Guardian",
+    title: "panda-guardian — Site Health",
+    hint: "ai doctor",
+    icon: <HeartPulse />,
+    tone: "text-shell",
+    w: 820,
+    h: 580,
+  },
 ];
 
 export function Desktop() {
+  return (
+    <Guardian>
+      <DesktopInner />
+    </Guardian>
+  );
+}
+
+function DesktopInner() {
   const [booted, setBooted] = useState(false);
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [focused, setFocused] = useState<AppId | null>(null);
@@ -230,6 +251,7 @@ export function Desktop() {
       cyber: <CyberApp />,
       contact: <ContactApp />,
       ai: <AiApp />,
+      guardian: <GuardianApp />,
       terminal: <TerminalApp onOpen={open} />,
     }),
     [],

@@ -60,7 +60,21 @@ export function GuardianApp() {
               >
                 <RefreshCcw className="size-3.5" /> refresh
               </button>
+              <button
+                type="button"
+                onClick={() => {
+                  window.setTimeout(() => {
+                    throw new Error(`guardian self-test: controlled fault ${Date.now()}`);
+                  }, 0);
+                  window.setTimeout(() => void load(), 8000);
+                }}
+                className="inline-flex items-center gap-2 rounded-full border border-warn/50 px-3 py-1 font-mono text-[10.5px] text-warn transition-colors hover:bg-warn/10"
+                aria-label="Run a controlled Guardian self-test"
+              >
+                <Activity className="size-3.5" /> run self-test
+              </button>
             </>
+
           }
         />
 
