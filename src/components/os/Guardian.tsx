@@ -26,7 +26,7 @@ async function sendReport(report: {
   message: string;
   stack?: string;
   component?: string;
-}): Promise<(GuardianVerdict & { id?: string }) | null> {
+}): Promise<(GuardianVerdict & { id?: string | undefined }) | null> {
   const signature = `${report.kind}:${report.message}`;
   const now = Date.now();
   if (signature === lastSignature && now - lastSentAt < 30_000) return null;
@@ -55,13 +55,13 @@ type BoundaryProps = { children: ReactNode; onCrash: (error: Error, info: ErrorI
 type BoundaryState = { generation: number; crashed: boolean };
 
 class SelfHealingBoundary extends Component<BoundaryProps, BoundaryState> {
-  state: BoundaryState = { generation: 0, crashed: false };
+  override state: BoundaryState = { generation: 0, crashed: false };
 
   static getDerivedStateFromError(): Partial<BoundaryState> {
     return { crashed: true };
   }
 
-  componentDidCatch(error: Error, info: ErrorInfo) {
+  override componentDidCatch(error: Error, info: ErrorInfo) {
     this.props.onCrash(error, info);
     // auto-heal: remount the subtree with a fresh key instead of leaving a blank screen
     window.setTimeout(() => {
@@ -69,7 +69,7 @@ class SelfHealingBoundary extends Component<BoundaryProps, BoundaryState> {
     }, 600);
   }
 
-  render() {
+  override render() {
     if (this.state.crashed) {
       return (
         <div className="grid h-screen w-full place-items-center bg-background px-6 text-center">

@@ -8,7 +8,8 @@ export type AppId =
   | "contact"
   | "cyber"
   | "terminal"
-  | "ai";
+  | "ai"
+  | "guardian";
 
 export type WindowState = {
   id: AppId;
