@@ -30,7 +30,8 @@ function fallbackVerdict(message: string): GuardianVerdict {
 }
 
 function pickAction(text: string): GuardianVerdict["action"] {
-  const lower = text.toLowerCase();
+  const heal = /self-heal\*{0,2}\s*[—:-]?\s*([^\n]*)/i.exec(text)?.[1];
+  const lower = (heal || text).toLowerCase();
   if (/\bignore\b/.test(lower)) return "ignore";
   if (/reload/.test(lower)) return "reload";
   if (/retry/.test(lower)) return "retry";
