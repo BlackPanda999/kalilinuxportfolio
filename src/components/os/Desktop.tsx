@@ -7,7 +7,6 @@ import {
   Mail,
   ScrollText,
   ShieldCheck,
-  HeartPulse,
   Terminal as TerminalIcon,
   UserRound,
   Wrench,
@@ -147,16 +146,6 @@ const APPS: AppDef[] = [
     tone: "text-shell",
     w: 740,
     h: 460,
-  },
-  {
-    id: "guardian",
-    label: "Panda Guardian",
-    title: "panda-guardian — Site Health",
-    hint: "ai doctor",
-    icon: <HeartPulse />,
-    tone: "text-shell",
-    w: 820,
-    h: 580,
   },
 ];
 
