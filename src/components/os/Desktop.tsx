@@ -7,7 +7,6 @@ import {
   Mail,
   ScrollText,
   ShieldCheck,
-  HeartPulse,
   Terminal as TerminalIcon,
   UserRound,
   Wrench,
