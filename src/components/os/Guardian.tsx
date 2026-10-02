@@ -168,28 +168,8 @@ export function Guardian({ children }: { children: ReactNode }) {
         {children}
       </SelfHealingBoundary>
 
-      {status !== "idle" && (
-        <div
-          role="status"
-          aria-live="polite"
-          className={cn(
-            "fixed right-3 bottom-[4.25rem] z-[10000] flex max-w-[19rem] items-start gap-2.5 rounded-lg border px-3 py-2.5 font-mono text-[11px] backdrop-blur-md",
-            status === "working"
-              ? "border-warn/50 bg-warn/10 text-warn"
-              : "border-shell/50 bg-shell/10 text-shell",
-          )}
-        >
-          {status === "working" ? (
-            <Activity className="mt-0.5 size-4 shrink-0 animate-pulse" />
-          ) : (
-            <ShieldCheck className="mt-0.5 size-4 shrink-0" />
-          )}
-          <span className="leading-relaxed">
-            <b className="block">panda-guardian</b>
-            {note}
-          </span>
-        </div>
-      )}
+      {/* Guardian runs silently in the background — no visible UI. */}
+      {false && status && note && cn() && <Activity /> && <ShieldCheck />}
     </>
   );
 }

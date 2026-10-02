@@ -148,16 +148,6 @@ const APPS: AppDef[] = [
     w: 740,
     h: 460,
   },
-  {
-    id: "guardian",
-    label: "Panda Guardian",
-    title: "panda-guardian — Site Health",
-    hint: "ai doctor",
-    icon: <HeartPulse />,
-    tone: "text-shell",
-    w: 820,
-    h: 580,
-  },
 ];
 
 export function Desktop() {
