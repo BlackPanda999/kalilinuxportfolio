@@ -1,0 +1,1 @@
+DROP POLICY "Anyone can read the health log" ON public.site_incidents;
