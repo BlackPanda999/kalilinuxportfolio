@@ -8,8 +8,10 @@ import kaliHack from "@/assets/kali-hack.jpg.asset.json";
 import kaliGlitch from "@/assets/kali-glitch.jpg.asset.json";
 import kaliCubes from "@/assets/kali-cubes.jpg.asset.json";
 import kaliNet from "@/assets/kali-net.jpg.asset.json";
+import kali2026Cubes from "@/assets/kali-2026-cubes-4k.jpg.asset.json";
 
 export const wallpapers = [
+  kali2026Cubes.url,
   kaliTiles.url,
   kaliCubes.url,
   kaliNet.url,
