@@ -1,5 +1,7 @@
 - [x] Remove wallpaper chooser; retain refresh randomization
 - [x] Upgrade Linux top panel status controls and branding
 - [x] Build safe Linux terminal practice lab and CTF
-- [ ] Upgrade cybersecurity and Linux AI assistant
-- [ ] Validate desktop, mobile, terminal, and live AI
+- [x] Upgrade cybersecurity and Linux AI assistant (completed in the earlier desktop upgrade)
+- [x] Validate desktop, mobile, terminal, and live AI (completed in the earlier desktop upgrade)
+- [x] Refresh Kali 2026.2 theme labels and add official Kali wallpaper without changing icons or layout
+- [x] Verify refreshed desktop, wallpaper loading, and terminal version

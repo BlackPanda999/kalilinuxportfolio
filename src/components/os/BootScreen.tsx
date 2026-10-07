@@ -129,7 +129,7 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
     <div
       role="status"
       aria-live="polite"
-      aria-label="Blackpanda Linux is starting up"
+      aria-label="Blackpanda Kali Linux 2026.2 theme is starting up"
       className="scanlines crt-flicker relative flex h-screen w-full flex-col overflow-hidden px-3 py-4 font-mono text-[10.5px] leading-relaxed sm:px-10 sm:py-6 sm:text-[12px] lg:text-[13px]"
       style={{ backgroundColor: "var(--color-terminal)" }}
     >
@@ -139,10 +139,10 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
           <p className="mb-2 text-center text-muted-foreground">GNU GRUB version 2.12</p>
           <div className="border border-border/80 p-3">
             <p className="bg-primary/85 px-2 py-0.5 text-primary-foreground">
-              Blackpanda Linux 2026.09 (kali-rolling)
+              Kali GNU/Linux · 2026.2 theme (Blackpanda)
             </p>
             <p className="px-2 py-0.5 text-muted-foreground">
-              Advanced options for Blackpanda Linux
+              Advanced options for Kali GNU/Linux
             </p>
             <p className="px-2 py-0.5 text-muted-foreground">Memory test (memtest86+)</p>
             <p className="px-2 py-0.5 text-muted-foreground">UEFI Firmware Settings</p>
@@ -188,7 +188,7 @@ export function BootScreen({ onDone }: { onDone: () => void }) {
               Blackpanda <span className="text-primary">Team</span>
             </p>
             <p className="mt-1 text-[11px] tracking-[0.34em] text-shell uppercase">
-              Linux 2026.09 · secure lab edition
+              Kali Linux · 2026.2 theme
             </p>
           </div>
           <div className="flex items-center gap-2">
