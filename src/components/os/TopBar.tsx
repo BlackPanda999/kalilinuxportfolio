@@ -43,7 +43,7 @@ export function TopBar({
   return (
     <header className="panel-blur scanlines-soft relative z-[9000] flex h-[2.35rem] items-center gap-1.5 border-b border-border/60 px-2 font-mono text-[11px] text-panel-foreground">
       {/* distro mark */}
-      <span className="flex items-center gap-1.5 rounded-md bg-primary/12 px-2 py-1 text-primary">
+      <span title="Blackpanda Team · Kali Linux 2026.2 theme" className="flex items-center gap-1.5 rounded-md bg-primary/12 px-2 py-1 text-primary">
         <ShieldCheck className="size-4" />
         <span className="hidden text-[10.5px] font-semibold tracking-[0.16em] sm:inline">
           Blackpanda Team
@@ -97,7 +97,7 @@ export function TopBar({
       </div>
 
       <span className="ml-2 hidden truncate text-muted-foreground lg:inline">
-        blackpanda999@kali: ~
+        kali-rolling · 2026.2 theme
       </span>
 
       {/* right status tray */}

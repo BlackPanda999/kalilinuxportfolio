@@ -137,7 +137,7 @@ function listDirectory(path: string, all: boolean, long: boolean) {
 
 export function TerminalApp({ onOpen }: { onOpen: (id: AppId) => void }) {
   const [lines, setLines] = useState<Line[]>([
-    { kind: "system", text: "Blackpanda Linux 2026.09 · safe training shell" },
+    { kind: "system", text: "Blackpanda Team · Kali Linux 2026.2 theme · safe training shell" },
     { kind: "out", text: "Type `help` to explore, `learn` to practise, or `ctf` for the challenge." },
   ]);
   const [value, setValue] = useState("");
@@ -215,7 +215,7 @@ export function TerminalApp({ onOpen }: { onOpen: (id: AppId) => void }) {
         break;
       }
       case "quiz": out("LINUX QUICK CHECK\nWhich command lists hidden files in long format?\nA) pwd   B) ls -la   C) cat -h\n\nExplore the shell to verify your answer."); break;
-      case "neofetch": out(`${profile.handle}@${profile.host}\n-----------------------------\nOS: Blackpanda Linux 2026.09\nHost: ${profile.name}\nRole: ${profile.titles.join(" / ")}\nShell: zsh 5.9\nTerminal: Blackpanda WebTTY\nSecurity labs: active`); break;
+      case "neofetch": out(`${profile.handle}@${profile.host}\n-----------------------------\nOS: Kali GNU/Linux (browser simulation)\nTheme: Kali Linux 2026.2 · Blackpanda Team\nHost: ${profile.name}\nRole: ${profile.titles.join(" / ")}\nShell: zsh 5.9\nTerminal: Blackpanda WebTTY\nSecurity labs: active`); break;
       case "projects": out(projects.map((item) => `- ${item.name} :: ${item.summary}`).join("\n")); break;
       case "certs":
       case "certifications": out(certifications.map((group) => `[${group.group}]\n  ${group.items.join("\n  ")}`).join("\n")); break;

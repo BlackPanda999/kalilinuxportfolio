@@ -3,3 +3,5 @@
 - [x] Build safe Linux terminal practice lab and CTF
 - [ ] Upgrade cybersecurity and Linux AI assistant
 - [ ] Validate desktop, mobile, terminal, and live AI
+- [ ] Refresh Kali 2026.2 theme labels and add official Kali wallpaper without changing icons or layout
+- [ ] Verify refreshed desktop, wallpaper loading, and terminal version
