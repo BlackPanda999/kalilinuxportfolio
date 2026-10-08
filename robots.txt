@@ -1,0 +1,18 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: *
+Allow: /
+
+# ctf hint 1/3 — welcome, curious visitor.
+# open the Terminal app on the desktop and run:  ctf
+# the flag looks like PANDA{...}  ·  `ls -la` is your friend
